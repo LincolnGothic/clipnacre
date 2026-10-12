@@ -2,6 +2,10 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.14 ajoute la reconnaissance visuelle du texte des captures. Appuyez sur **Super+Shift+S**, puis ouvrez **Copier le texte de l’image** (**Ctrl+Shift+O**) dans l’éditeur. Cliquez sur un mot reconnu ou faites glisser sur une zone, vérifiez et modifiez le résultat, puis copiez-le. **Sélectionner tout le texte** rétablit le résultat complet. L’OCR fonctionne localement ; l’anglais est inclus. Pour le français, installez `tesseract-ocr-fra` et choisissez cette langue dans la fenêtre de reconnaissance. L’anglais installé est associé à la langue choisie pour reconnaître les textes mixtes. Après la mise à jour, enregistrez votre travail, déconnectez-vous puis reconnectez-vous.
+
+![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
+
 v0.1.13 fige l’écran dès Super+Shift+S et conserve les notifications et menus pendant la sélection. L’historique reconnaît les alias MIME PNG/JPEG et les formats mal étiquetés, convertit les BMP/WebP pris en charge et importe un seul fichier image local copié. Le parcours exact dans QQ reste à vérifier sur le bureau.
 
 v0.1.12 corrige un panneau de presse-papiers Super+V invisible, notamment lors de sa réouverture sans modification du contenu. v0.1.11 corrige le panneau Super+V qui dépassait de l’écran et sa position après réouverture. Il s’ouvre près du dernier clic dans l’application active, même si la souris a bougé ; à défaut de clic valide, il utilise la position actuelle du pointeur. Sa taille s’adapte à la zone disponible et sa barre de titre permet de le déplacer.
@@ -18,10 +22,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## Première installation
 
-Téléchargez le [paquet v0.1.13](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
+Téléchargez le [paquet v0.1.14](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.13_all.deb
+sudo apt install ./super-v-ubuntu_0.1.14_all.deb
 ```
 
 Après l’installation, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**. Exécutez ces commandes avec votre compte habituel, sans sudo. La première réserve Super+M aux notifications et libère Super+V ; elle remplace tout raccourci de notification personnalisé.
@@ -32,11 +36,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Appuyez sur **Super+V** ; le titre doit afficher **Super V 0.1.13**.
+Appuyez sur **Super+V** ; le titre doit afficher **Super V 0.1.14**.
 
-## Mise à jour vers v0.1.13
+## Mise à jour vers v0.1.14
 
-Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **Super V 0.1.13** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
+Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **Super V 0.1.14** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
 
 Vérifiez le paquet installé et l’extension chargée par GNOME avec votre compte habituel :
 
@@ -45,9 +49,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Les deux versions doivent indiquer **0.1.13** (le numéro interne de l’extension est 14). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
+Les deux versions doivent indiquer **0.1.14** (le numéro interne de l’extension est 15). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
 
-## Guide des paramètres de v0.1.13
+## Guide des paramètres de v0.1.14
 
 Ouvrez Super+V et cliquez sur l’engrenage dans l’en-tête pour ouvrir les paramètres.
 

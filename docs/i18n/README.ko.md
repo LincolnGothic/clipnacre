@@ -2,6 +2,10 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.14에는 스크린샷의 시각적 텍스트 인식이 추가되었습니다. **Super+Shift+S**로 캡처하고 편집기에서 **이미지에서 텍스트 복사**(**Ctrl+Shift+O**)를 여세요. 인식된 단어를 클릭하거나 영역을 드래그하여 선택한 뒤 결과를 검토·수정하고 복사할 수 있습니다. **모든 텍스트 선택**을 누르면 전체 인식 결과가 복원됩니다. OCR은 로컬에서 실행되며 영어는 설치 패키지에 포함됩니다. 한국어에는 `tesseract-ocr-kor`를 설치하고 인식 창에서 한국어를 선택하세요. 설치된 영어 팩은 선택한 언어와 함께 혼합 텍스트 인식에 사용됩니다. 업데이트 후 작업을 저장하고 로그아웃한 다음 다시 로그인하세요.
+
+![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
+
 v0.1.13은 Super+Shift+S를 누르는 순간 화면을 고정하여 영역을 선택하는 동안 알림과 메뉴를 보존합니다. 이미지 기록은 PNG/JPEG MIME 별칭과 잘못 표시된 형식, 지원되는 BMP/WebP 변환, 복사한 단일 로컬 이미지 파일을 지원합니다. QQ의 실제 복사 과정은 데스크톱에서 확인해야 합니다.
 
 v0.1.12는 내용을 바꾸지 않고 다시 열 때 Super+V 클립보드 패널이 보이지 않을 수 있는 문제를 수정합니다. v0.1.11은 Super+V 패널이 화면 밖으로 벗어나거나 다시 열 때 이전 위치에 남는 문제를 수정합니다. 활성 앱에서 마지막으로 클릭한 위치 근처에 열리므로 마우스를 옮겨도 입력란 근처에 표시됩니다. 유효한 클릭 기록이 없으면 현재 포인터 위치를 사용합니다. 화면의 사용 가능한 영역에 맞게 크기가 조정되며 제목 표시줄을 드래그하여 이동할 수 있습니다.
@@ -18,10 +22,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 처음 설치
 
-[v0.1.13 패키지](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb)를 다운로드하고 파일이 있는 폴더에서 터미널을 여세요.
+[v0.1.14 패키지](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)를 다운로드하고 파일이 있는 폴더에서 터미널을 여세요.
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.13_all.deb
+sudo apt install ./super-v-ubuntu_0.1.14_all.deb
 ```
 
 설치 후 **작업을 저장하고 로그아웃한 다음 다시 로그인**하세요. 다음 명령은 일반 사용자로 실행합니다(sudo 사용 안 함). 첫 번째 명령은 알림 단축키를 Super+M으로 설정하여 Super+V를 사용할 수 있게 합니다. 기존 사용자 지정 알림 단축키는 변경됩니다.
@@ -32,11 +36,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-**Super+V**를 누르면 제목에 **Super V 0.1.13**이 표시되어야 합니다.
+**Super+V**를 누르면 제목에 **Super V 0.1.14**이 표시되어야 합니다.
 
-## v0.1.13으로 업데이트
+## v0.1.14으로 업데이트
 
-위 패키지를 다운로드하고 해당 폴더에서 같은 apt 명령을 실행하세요. 이전 패키지를 덮어써서 업데이트하므로 먼저 제거할 필요가 없습니다. **작업을 저장하고 로그아웃한 다음 다시 로그인**한 뒤, **Super+V** 제목이 **Super V 0.1.13**인지 확인하세요. 언어와 단축키 설정은 유지되며 저장된 텍스트 기록, 고정 항목 및 최근 이모지가 이전됩니다. 로그아웃 시 삭제하도록 설정한 기록은 해당 설정에 따라 삭제됩니다.
+위 패키지를 다운로드하고 해당 폴더에서 같은 apt 명령을 실행하세요. 이전 패키지를 덮어써서 업데이트하므로 먼저 제거할 필요가 없습니다. **작업을 저장하고 로그아웃한 다음 다시 로그인**한 뒤, **Super+V** 제목이 **Super V 0.1.14**인지 확인하세요. 언어와 단축키 설정은 유지되며 저장된 텍스트 기록, 고정 항목 및 최근 이모지가 이전됩니다. 로그아웃 시 삭제하도록 설정한 기록은 해당 설정에 따라 삭제됩니다.
 
 일반 사용자로 설치된 패키지와 GNOME이 불러온 확장 기능의 버전을 확인하세요.
 
@@ -45,9 +49,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-두 버전 모두 **0.1.13**이어야 합니다(확장 기능 내부 번호는 14). 패키지만 새 버전이면 먼저 로그아웃하고 다시 로그인하세요. 시스템 패키지의 Path는 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`입니다. 홈 폴더를 가리키면 해당 UUID 폴더를 백업하고 확장 기능 디렉터리 밖으로 옮긴 후 다시 로그인하세요. Super+V가 반응하지 않으면 위의 enable 명령을 실행하고, 알림을 열면 처음 설치의 알림 단축키 명령을 확인하세요. 설정을 직접 열려면 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`을 실행하세요.
+두 버전 모두 **0.1.14**이어야 합니다(확장 기능 내부 번호는 15). 패키지만 새 버전이면 먼저 로그아웃하고 다시 로그인하세요. 시스템 패키지의 Path는 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`입니다. 홈 폴더를 가리키면 해당 UUID 폴더를 백업하고 확장 기능 디렉터리 밖으로 옮긴 후 다시 로그인하세요. Super+V가 반응하지 않으면 위의 enable 명령을 실행하고, 알림을 열면 처음 설치의 알림 단축키 명령을 확인하세요. 설정을 직접 열려면 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`을 실행하세요.
 
-## v0.1.13 설정 안내
+## v0.1.14 설정 안내
 
 Super+V를 열고 제목 옆의 톱니바퀴 버튼을 눌러 설정을 여세요.
 

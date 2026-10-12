@@ -1,10 +1,13 @@
 # Super V Ubuntu
 
-A Windows-style **Super+V** clipboard and character picker for Ubuntu and Debian GNOME.
-Keep text and image history, capture screenshots, annotate them, pin reference images
-above your apps, and copy text from images with local OCR. Emoji, kaomoji, symbols,
-and GIF favorites share one keyboard-friendly popup. Seven interface languages are
-included; clipboard contents and OCR stay on your computer.
+A Windows-style **Super+V** clipboard and character picker for Ubuntu and Debian GNOME,
+with screenshot capture, image editing, floating image pins, and local text recognition.
+Keep and search text/image clipboard history, annotate screenshots, and click or drag
+over recognized words to extract, edit, and copy their text. Emoji, kaomoji, symbols,
+and local GIF favorites share the same keyboard-friendly popup.
+
+Seven interface languages are included. Clipboard contents, images, and OCR stay
+on your computer; no account or cloud service is needed.
 GPL-3.0-or-later; Unicode data uses Unicode-3.0.
 
 [English](README.md) · [简体中文](docs/i18n/README.zh-CN.md) ·
@@ -15,12 +18,13 @@ GPL-3.0-or-later; Unicode data uses Unicode-3.0.
 **Current release: [v0.1.14](https://github.com/LincolnGothic/super-v-ubuntu/releases/tag/v0.1.14)** ·
 [Download installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb) ·
 [First installation](#install-the-debian-package) · [Upgrade](#upgrade-from-an-older-version) ·
-[Feature guide](#use-v0113) · [Troubleshooting](#troubleshooting)
+[Feature guide](#feature-guide) · [Screenshot OCR](#copy-text-from-an-image) · [Troubleshooting](#troubleshooting)
 
-**Release status:** automated logic, package, and isolated GNOME Wayland checks
-are available. Image capture, native screenshot capture, and GTK image paste
-are covered by the isolated tests. Full application and desktop acceptance is
-tracked in [testing](docs/testing.md). See [v0.1.14 validation](docs/verification-v0.1.14.md).
+**Release status:** v0.1.14 installers and `SHA256SUMS` are published. All six
+distribution/CPU targets passed the [release CI run](https://github.com/LincolnGothic/super-v-ubuntu/actions/runs/38240409019),
+including package installation/removal and isolated GNOME Wayland screenshot,
+OCR selection/copy, image paste, and screen-pin checks. See [validation](docs/verification-v0.1.14.md)
+and [desktop acceptance](docs/testing.md) for the checks and their limits.
 
 ## Platforms and downloads
 
@@ -46,13 +50,21 @@ and [v0.1.14 verification](docs/verification-v0.1.14.md). Interactive desktop ac
 remains distinct from these automated checks. No Electron, background daemon, or
 `xdotool` is needed.
 
-v0.1.14 adds visual text recognition to the screenshot editor. Recognized words
-are highlighted over the image; click a word or drag across a region, review and
-edit the selected text, then copy it. **Select all text** restores the full result.
-Recognition runs locally, including mixed Chinese/English with installed language
-packs. See [validation](docs/verification-v0.1.14.md).
+## New in v0.1.14: visual screenshot OCR
 
-## Use v0.1.14
+1. Press **Super+Shift+S**, drag an area, and release to capture it. The editor
+   opens automatically with the current screenshot.
+2. Click **Copy text from image**, or press **Ctrl+Shift+O** in the editor.
+3. Click a highlighted word or drag across a region to select the text you need.
+4. Review and edit the result, then click **Copy text**. **Select all text**
+   restores the complete recognition result.
+
+Recognition runs locally with Tesseract. English is included with the installer;
+install the corresponding packs for Chinese and other languages. Installed English
+is also used with your chosen language for mixed text. See the
+[OCR language setup and full guide](#copy-text-from-an-image).
+
+## Feature guide
 
 Open **Super+V**, then click the gear button in the header to open Settings.
 
@@ -80,6 +92,13 @@ and [shutdown](#clear-history-on-shutdown) instructions for details.
 
 ## Screenshots
 
+**Visual screenshot text recognition — v0.1.14**
+
+Click or drag over recognized words in the screenshot preview, then edit and copy
+the selected text. This is the actual GTK dialog in an isolated Wayland test session.
+
+![Visual screenshot OCR with two words selected and extracted](docs/screenshots/ocr-v0.1.14.png)
+
 **Screenshot editor — v0.1.9**
 
 The editor includes inline text entry, light mosaic, a black-and-white filter, annotation selection, numbered markers, local OCR, and screen pins.
@@ -101,8 +120,9 @@ This example uses the actual export renderer with two brush/tile sizes.
 
 **Text and image history — v0.1.6**
 
-Copied images share the clipboard list with text. The camera button opens
-GNOME’s normal screenshot controls (Print Screen).
+Copied images share the clipboard list with text. This screenshot shows the
+v0.1.6 interface; current releases capture a fresh area with the camera button or
+**Super+Shift+S**. **Print Screen** opens GNOME’s normal screenshot controls.
 
 ![Super V 0.1.6 text and image history with thumbnail previews, dimensions and a screenshot button](docs/screenshots/clipboard-images-v0.1.6.png)
 
@@ -374,20 +394,30 @@ highlights its words in a preview above the editable result.
 - Choose an installed language and click **Recognize text** to run again. Close
   the dialog to cancel a running recognition.
 
-![Visual screenshot OCR with two words selected and extracted](docs/screenshots/ocr-v0.1.14.png)
-
 Recognition can make mistakes; review the result before using it. Work is cancelled
 when the dialog/editor closes. Each run has a 30-second total timeout, a 64 KiB text
 limit, a 512 KiB geometry-output limit and at most 4,096 word highlights. Image
 data passes through anonymous pipes without scratch images, accounts, network
 requests, or cloud services.
 
-English OCR is installed with the package. Add other recognition languages with:
+English OCR is installed with the package. For Simplified Chinese, install:
 
 ```sh
-sudo apt install tesseract-ocr-chi-sim tesseract-ocr-chi-tra tesseract-ocr-jpn \
-    tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-kor
+sudo apt install tesseract-ocr-chi-sim
 ```
+
+Choose **简体中文** in the OCR dialog and click **Recognize text**. For another
+language, install the corresponding package below; install only the packs you need.
+
+| Recognition language | Tesseract package |
+| --- | --- |
+| English | `tesseract-ocr-eng` (included) |
+| 简体中文 / Simplified Chinese | `tesseract-ocr-chi-sim` |
+| 繁體中文 / Traditional Chinese | `tesseract-ocr-chi-tra` |
+| 日本語 / Japanese | `tesseract-ocr-jpn` |
+| 한국어 / Korean | `tesseract-ocr-kor` |
+| Español / Spanish | `tesseract-ocr-spa` |
+| Français / French | `tesseract-ocr-fra` |
 
 Settings chooses the preferred OCR language; the OCR dialog lists packs actually
 installed and falls back to the first available pack if the preference is missing.

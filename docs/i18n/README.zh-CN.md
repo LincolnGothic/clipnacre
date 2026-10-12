@@ -2,6 +2,10 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.14 新增可视化截图文字识别。按 **Super+Shift+S** 截图，在编辑器中点击 **从图像复制文字**（或按 **Ctrl+Shift+O**），即可在图片上查看识别出的文字框。点击单个词或拖动选择一片区域，检查并编辑结果后复制；**选择全部文字** 可恢复完整识别结果。OCR 在本机运行，英文语言包随安装包提供；中文需安装 `tesseract-ocr-chi-sim` 或 `tesseract-ocr-chi-tra`，并在识别对话框中选择对应语言。已安装的英文语言包会与所选语言一起用于识别混合文字。升级后请保存工作、注销并重新登录。
+
+![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
+
 v0.1.13 在按下 Super+Shift+S 时冻结屏幕，选区和导出使用同一张快照，保留当时可见的通知和菜单。图片历史支持 PNG/JPEG 格式别名和错误标记的格式、BMP/WebP 像素转换，以及单个本地图片文件。QQ 的具体复制流程仍需在实际桌面验证。
 
 v0.1.12 修复了 Super+V 剪贴板面板不可见的问题，尤其是内容未变化时再次打开的情况。 v0.1.11 修复了 Super+V 面板超出屏幕和再次打开时位置错误的问题。面板会在当前应用中上次点击的位置附近打开，鼠标移走也不影响；没有可用记录时使用鼠标当前位置。面板大小按可用屏幕区域调整，也可拖动标题栏移动。
@@ -18,10 +22,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 首次安装
 
-下载 [v0.1.13 安装包](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb)，在安装包所在文件夹中打开终端：
+下载 [v0.1.14 安装包](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)，在安装包所在文件夹中打开终端：
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.13_all.deb
+sudo apt install ./super-v-ubuntu_0.1.14_all.deb
 ```
 
 安装后**保存工作、注销并重新登录**，再以普通用户运行以下命令（不使用 sudo）。第一个命令将通知快捷键设为 Super+M，为本应用释放 Super+V；它会替换自定义通知快捷键。
@@ -32,11 +36,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-按 **Super+V**，标题应为 **Super V 0.1.13**。
+按 **Super+V**，标题应为 **Super V 0.1.14**。
 
-## 升级到 v0.1.13
+## 升级到 v0.1.14
 
-下载上面的安装包，在安装包所在文件夹中运行同一个 apt 命令，即可覆盖升级，无须先卸载。随后**保存工作、注销并重新登录**，再按 **Super+V** 检查标题是否为 **Super V 0.1.13**。语言和快捷键设置会保留，已保存的文本历史、固定项目和最近使用的表情会迁移；设置为注销时清空的历史会按设置清空。
+下载上面的安装包，在安装包所在文件夹中运行同一个 apt 命令，即可覆盖升级，无须先卸载。随后**保存工作、注销并重新登录**，再按 **Super+V** 检查标题是否为 **Super V 0.1.14**。语言和快捷键设置会保留，已保存的文本历史、固定项目和最近使用的表情会迁移；设置为注销时清空的历史会按设置清空。
 
 以普通用户检查安装包和 GNOME 当前加载的版本：
 
@@ -45,9 +49,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-两个版本都应为 **0.1.13**（扩展内部编号为 14）。若安装包为新版而 GNOME 仍加载旧版，请先注销并重新登录。系统安装的 Path 应为 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向用户目录，请备份并将该 UUID 文件夹移到扩展目录之外，再注销登录。若 Super+V 没有反应，可运行上面的 enable 命令；若打开的是通知，检查首次安装中的通知快捷键命令。设置打不开时，可运行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
+两个版本都应为 **0.1.14**（扩展内部编号为 15）。若安装包为新版而 GNOME 仍加载旧版，请先注销并重新登录。系统安装的 Path 应为 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向用户目录，请备份并将该 UUID 文件夹移到扩展目录之外，再注销登录。若 Super+V 没有反应，可运行上面的 enable 命令；若打开的是通知，检查首次安装中的通知快捷键命令。设置打不开时，可运行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
 
-## v0.1.13 设置速查
+## v0.1.14 设置速查
 
 按 Super+V，点击标题栏的齿轮按钮打开“设置”。
 
