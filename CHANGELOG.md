@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.14 — 2026-10-12
+
+- Make screenshot text recognition visible in the editor toolbar. Show the edited screenshot with word highlights above the editable result.
+- Click a word or drag across a region to select text in reading order. Restore all text, edit recognition mistakes, and copy a selected text range or the entire result.
+- Preserve mixed Chinese/English recognition and all seven interface languages. Keep image and OCR data local, using pipes without scratch images.
+- Validate OCR word geometry, bound subprocess output and word counts, clear stale results on retry, and cancel recognition when closing.
+- Add native Wayland pointer-selection, Unicode editing/copy, empty/oversized text and cancellation regression checks.
+
 ## 0.1.13 — 2026-10-04
 
 - Expand the About description with screenshots, annotations, screen pins and local OCR.

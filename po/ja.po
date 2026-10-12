@@ -1046,3 +1046,9 @@ msgstr "↑↓ 選択 · Enter 貼り付け · Esc 閉じる · Ctrl+Tab 切替"
 
 msgid "↑↓←→ Select · Enter Paste · Ctrl+F Search · Esc Close"
 msgstr "↑↓←→ 選択 · Enter 貼り付け · Ctrl+F 検索 · Esc 閉じる"
+
+msgid "Select all text"
+msgstr "すべてのテキストを選択"
+
+msgid "Click or drag over the image to select text. Edit the result before copying."
+msgstr "画像をクリックまたはドラッグしてテキストを選択します。コピーする前に結果を編集できます。"

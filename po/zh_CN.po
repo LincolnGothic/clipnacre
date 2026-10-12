@@ -1046,3 +1046,9 @@ msgstr "↑↓ 选择 · Enter 粘贴 · Esc 关闭 · Ctrl+Tab 切换"
 
 msgid "↑↓←→ Select · Enter Paste · Ctrl+F Search · Esc Close"
 msgstr "↑↓←→ 选择 · Enter 粘贴 · Ctrl+F 搜索 · Esc 关闭"
+
+msgid "Select all text"
+msgstr "选择全部文字"
+
+msgid "Click or drag over the image to select text. Edit the result before copying."
+msgstr "点击或在图像上拖动以选择文字。复制前可编辑识别结果。"

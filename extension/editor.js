@@ -13,6 +13,7 @@ import {MAX_IMAGE_BYTES} from './core/image.js';
 import {decodeImage, drawDocument, exportPng} from './editor-render.js';
 import {DEFAULT_EXPORT_PATTERN, exportFilename, MAX_OCR_TEXT_BYTES, OCR_LANGUAGES} from './core/export.js';
 import {OcrEngine} from './ocr.js';
+import {OcrPreview} from './ocr-preview.js';
 import {writePipe} from './process.js';
 
 export const directory = Gio.File.new_for_uri(import.meta.url).get_parent();
@@ -54,7 +55,7 @@ export class ImageEditor {
         this.copyButton = action(N_('Copy image'), () => this.copy());
         this.saveButton = action(N_('Save image'), () => this.save());
         this.pinButton = action(N_('Pin to screen'), () => this.pin(), 'view-pin-symbolic');
-        this.ocrButton = action(N_('Copy text from image'), () => this.recognizeText(), 'edit-find-symbolic');
+        this.ocrButton = action(N_('Copy text from image'), () => this.recognizeText());
         header.pack_end(this.pinButton);
         header.pack_end(this.ocrButton);
         this.deleteButton = action(N_('Delete annotation'), () => {
@@ -200,6 +201,7 @@ export class ImageEditor {
             this.settings.disconnect(this._languageHandler);
             this.dialog?.destroy();
             this.ocrCancel?.cancel();
+            this.ocrPreview?.clear();
             this.ocrDialog?.destroy();
             this.pixbuf = null;
             return false;
@@ -460,11 +462,19 @@ export class ImageEditor {
     }
 
     async recognizeText() {
+        if (this.cancel.is_cancelled()) return;
         if (this.ocrDialog) { this.ocrDialog.present(); return; }
         if (!this.ocr.program) { this.toast(_('Install Tesseract OCR to recognize text.')); return; }
         if (this._commitText() === false) return;
-        const dialog = new Adw.Window({transient_for: this.window, modal: true, default_width: 640,
-            default_height: 420, title: _('Copy text from image')});
+        let snapshot, previewImage;
+        try {
+            snapshot = exportPng(this.pixbuf, this.document.state);
+            previewImage = decodeImage(snapshot, 'image/png');
+        } catch {
+            this.toast(_('Could not export the image. Crop it to reduce its size.')); return;
+        }
+        const dialog = new Adw.Window({transient_for: this.window, modal: true, default_width: 720,
+            default_height: 640, title: _('Copy text from image')});
         this.ocrDialog = dialog;
         this.ocrCancel = new Gio.Cancellable();
         const root = new Gtk.Box({orientation: Gtk.Orientation.VERTICAL, spacing: 8,
@@ -475,24 +485,46 @@ export class ImageEditor {
         controls.append(language);
         const run = new Gtk.Button({label: _('Recognize text'), sensitive: false}); controls.append(run);
         const copy = new Gtk.Button({label: _('Copy text'), sensitive: false}); controls.append(copy);
+        const all = new Gtk.Button({label: _('Select all text'), sensitive: false}); controls.append(all);
         const status = new Gtk.Label({label: _('Loading OCR languages…'), wrap: true}); root.append(status);
+        const hint = new Gtk.Label({label: _('Click or drag over the image to select text. Edit the result before copying.'),
+            wrap: true, xalign: 0}); root.append(hint);
+        const spinner = new Gtk.Spinner({spinning: true}); root.append(spinner);
         const view = new Gtk.TextView({wrap_mode: Gtk.WrapMode.WORD_CHAR, left_margin: 8, right_margin: 8,
             top_margin: 8, bottom_margin: 8});
-        const scroll = new Gtk.ScrolledWindow({hexpand: true, vexpand: true}); scroll.set_child(view); root.append(scroll);
+        const preview = new OcrPreview(previewImage, text => {
+            view.buffer.set_text(text, -1);
+            if (!spinner.spinning) status.label = _('Review the recognized text before copying.');
+        });
+        this.ocrPreview = preview;
+        const panes = new Gtk.Paned({orientation: Gtk.Orientation.VERTICAL, hexpand: true, vexpand: true,
+            position: 240, wide_handle: true});
+        panes.set_start_child(preview.area);
+        const scroll = new Gtk.ScrolledWindow({hexpand: true, vexpand: true, min_content_height: 100});
+        scroll.set_child(view); panes.set_end_child(scroll); root.append(panes);
+        all.connect('clicked', () => preview.selectAll());
         this.ocrBuffer = view.buffer;
         this.ocrCopy = copy; this.ocrRun = run; this.ocrLanguage = language; this.ocrStatus = status;
+        this.ocrSelectAll = all;
+        view.buffer.connect('changed', () => {
+            const [start, end] = view.buffer.get_bounds();
+            const text = view.buffer.get_text(start, end, false);
+            copy.sensitive = !spinner.spinning && !!text && new TextEncoder().encode(text).length <= MAX_OCR_TEXT_BYTES;
+        });
         let installed = [];
+        const alive = () => this.ocrDialog === dialog && !this.ocrCancel.is_cancelled();
         const copyText = async selection => {
+            if (!copy.sensitive || !alive()) return;
             const bounds = selection ? view.buffer.get_selection_bounds() : [];
             const [start, end] = bounds[0] ? bounds.slice(1) : view.buffer.get_bounds();
             const text = view.buffer.get_text(start, end, false);
             if (!text || new TextEncoder().encode(text).length > MAX_OCR_TEXT_BYTES) {
                 status.label = _('Text is empty or exceeds the copy limit.'); return;
             }
-            try { await this.onText(text); status.label = _('Text copied. Paste it into your application.'); }
-            catch { status.label = _('Could not copy the text.'); }
+            try { await this.onText(text); if (alive()) status.label = _('Text copied. Paste it into your application.'); }
+            catch { if (alive()) status.label = _('Could not copy the text.'); }
         };
-        copy.connect('clicked', () => copyText(false));
+        copy.connect('clicked', () => copyText(true));
         const keys = new Gtk.EventControllerKey({propagation_phase: Gtk.PropagationPhase.CAPTURE});
         keys.connect('key-pressed', (_controller, key, _code, modifiers) => {
             if (modifiers & Gdk.ModifierType.CONTROL_MASK && [Gdk.KEY_c, Gdk.KEY_C].includes(key)) {
@@ -503,30 +535,38 @@ export class ImageEditor {
         });
         dialog.add_controller(keys);
         const recognize = async () => {
+            if (!installed.length || !alive()) return;
             this.ocrCancel.cancel(); this.ocrCancel = new Gio.Cancellable();
             const cancel = this.ocrCancel;
-            run.sensitive = false; copy.sensitive = false; language.sensitive = false;
+            spinner.spinning = true;
+            run.sensitive = false; copy.sensitive = false; language.sensitive = false; all.sensitive = false;
+            preview.area.sensitive = false; view.editable = false;
+            preview.setResult({words: []});
             status.label = _('Recognizing text…');
             try {
                 const selected = installed[language.selected];
                 this.settings.set_string('ocr-language', selected);
-                const text = await this.ocr.recognize(exportPng(this.pixbuf, this.document.state), selected, installed, cancel);
+                const result = await this.ocr.recognizeDetailed(snapshot, selected, installed, cancel);
                 if (cancel.is_cancelled() || this.ocrDialog !== dialog) return;
-                view.buffer.set_text(text, -1);
-                copy.sensitive = !!text;
-                status.label = text ? _('Review the recognized text before copying.') : _('No text was recognized.');
+                preview.setResult(result);
+                all.sensitive = !!result.words.length;
+                status.label = result.text ? _('Review the recognized text before copying.') : _('No text was recognized.');
             } catch {
                 if (!cancel.is_cancelled() && this.ocrDialog === dialog)
                     status.label = _('OCR failed. Check the language packs or crop a smaller area.');
             } finally {
                 if (!cancel.is_cancelled() && this.ocrDialog === dialog) {
-                    run.sensitive = true; language.sensitive = true;
+                    spinner.spinning = false;
+                    run.sensitive = true; language.sensitive = true; preview.area.sensitive = true; view.editable = true;
+                    view.buffer.emit('changed');
                 }
             }
         };
         run.connect('clicked', recognize);
         dialog.connect('close-request', () => {
             this.ocrCancel.cancel(); view.buffer.set_text('', -1);
+            preview.clear();
+            this.ocrPreview = this.ocrSelectAll = null;
             this.ocrDialog = this.ocrBuffer = this.ocrCopy = this.ocrRun = this.ocrLanguage = this.ocrStatus = null;
             return false;
         });
@@ -534,13 +574,13 @@ export class ImageEditor {
         try {
             installed = await this.ocr.languages(this.ocrCancel);
             if (this.ocrDialog !== dialog || this.ocrCancel.is_cancelled()) return;
-            if (!installed.length) { status.label = _('No OCR language packs are installed.'); return; }
+            if (!installed.length) { spinner.spinning = false; status.label = _('No OCR language packs are installed.'); return; }
             language.model = Gtk.StringList.new(installed.map(id => OCR_LANGUAGES.find(option => option.id === id)?.label ?? id));
             const choice = this.settings.get_string('ocr-language');
             language.selected = Math.max(0, installed.indexOf(choice));
             await recognize();
         } catch {
-            if (this.ocrDialog === dialog) status.label = _('Could not load OCR language packs.');
+            if (this.ocrDialog === dialog) { spinner.spinning = false; status.label = _('Could not load OCR language packs.'); }
         }
     }
 

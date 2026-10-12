@@ -47,9 +47,10 @@ Screen pins are temporary, with five pins and a 32 MiB compressed-input budget.
 Their decoded previews are limited to 1024×1024; original pin bytes are held only
 in memory for Copy. Lock, clear, and disable destroy overlays and references.
 OCR invokes the installed Tesseract executable directly, without a command shell;
-images enter stdin and bounded text leaves stdout. No scratch images or network
+images enter stdin and bounded text/word geometry leaves stdout. No scratch images or network
 service is used. Cancelling or closing the editor stops recognition; a run is
-limited to 30 seconds and 64 KiB output. OCR text reaches the clipboard only after
+limited to 30 seconds, 64 KiB recognized text, 512 KiB TSV output and 4,096 word
+highlights. Word coordinates must fit the edited image. OCR text reaches the clipboard only after
 an explicit Copy. Settings store a save-folder URI, filename pattern, and OCR
 language ID, but no image or recognized text. Independent exports and GNOME
 screenshots retain the same erasure limitations described above.

@@ -15,7 +15,7 @@ with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
     for relative in ['extension.js', 'prefs.js', 'metadata.json', 'stylesheet.css', 'shell-compat.js',
                      'core/history.js', 'core/catalog.js', 'core/placement.js', 'core/gif.js',
                      'editor.js', 'editor-render.js', 'editor-bridge.js', 'core/editor.js',
-                     'pins.js', 'ocr.js', 'process.js', 'core/frames.js', 'core/pins.js', 'core/export.js',
+                     'pins.js', 'ocr.js', 'ocr-preview.js', 'core/ocr.js', 'process.js', 'core/frames.js', 'core/pins.js', 'core/export.js',
                      'gifs.js', 'images.js', 'clipboard-image.js', 'core/image.js', 'data/emoji.json', 'data/LICENSE.txt',
                      'schemas/org.gnome.shell.extensions.super-v-ubuntu.gschema.xml',
                      'schemas/gschemas.compiled']:
@@ -24,7 +24,7 @@ with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
     assert not any('history.json' in name or 'node_modules' in name for name in files)
     metadata = json.load(tar.extractfile(prefix + 'metadata.json'))
     assert metadata['shell-version'] == ['46', '48', '50'], 'Incorrect Shell compatibility'
-    assert metadata['version-name'] == '0.1.13' and metadata['version'] == 14
+    assert metadata['version-name'] == '0.1.14' and metadata['version'] == 15
     assert metadata['gettext-domain'] == 'super-v-ubuntu'
     for locale in ['zh_CN', 'zh_TW', 'ja', 'es', 'fr', 'ko']:
         name = prefix + f'locale/{locale}/messages.json'
@@ -46,7 +46,7 @@ with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
         assert entry.uid == 0 and entry.gid == 0, 'Incorrect package ownership'
         assert not entry.mode & 0o022, 'Group/world writable file'
 control = subprocess.check_output(['dpkg-deb', '-f', str(deb), 'Architecture', 'Version'], text=True)
-assert 'all' in control and '0.1.13' in control
+assert 'all' in control and '0.1.14' in control
 dependencies = subprocess.check_output(['dpkg-deb', '-f', str(deb), 'Depends'], text=True)
 target = sys.argv[2] if len(sys.argv) > 2 else 'universal'
 ranges = {'ubuntu24.04': ('46', '47'), 'debian13': ('48', '49'), 'ubuntu26.04': ('50', '51')}

@@ -7,8 +7,8 @@
     "48",
     "50"
   ],
-  "version": 14,
-  "version-name": "0.1.13",
+  "version": 15,
+  "version-name": "0.1.14",
   "settings-schema": "org.gnome.shell.extensions.super-v-ubuntu",
   "session-modes": [
     "user"

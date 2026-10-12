@@ -102,7 +102,12 @@ clear, source deletion, or disable. Their drag grab and monitor signals are rele
 
 `ocr.js` invokes native Tesseract through `process.js`: argv is fixed except a
 validated installed language ID; PNG input and bounded UTF-8 output use pipes.
-Recognition supports cancellation, 30-second timeouts, and 64 KiB output limits.
+Recognition supports cancellation, a 30-second total deadline and a short-block
+fallback. `core/ocr.js` validates TSV word geometry against the image dimensions,
+with limits of 512 KiB TSV, 4,096 words and 64 KiB reconstructed text.
+`ocr-preview.js` draws word highlights over a fixed edited PNG snapshot, maps
+pointer coordinates back to image pixels and selects intersected words in reading
+order. The preview is independent of the editor document and PNG export renderer.
 The OCR review buffer is temporary; explicit Copy writes through Shell so clipboard
 ownership survives closing the GTK editor. Filename patterns and folder URIs are
 GSettings preferences. Successful private exports remember their parent folder.

@@ -153,6 +153,31 @@ export async function run() {
     }
     Gio.File.new_for_path(`${GLib.getenv('XDG_STATE_HOME')}/text-probe-done`).replace_contents('done', null, false,
         Gio.FileCreateFlags.PRIVATE, null);
+    for (const action of ['click', 'drag']) {
+        const request = Gio.File.new_for_path(`${GLib.getenv('XDG_STATE_HOME')}/ocr-${action}-probe.json`);
+        await waitFor(() => request.query_exists(null));
+        const dialog = global.get_window_actors().find(actor => actor.meta_window.get_title() === _('Copy text from image')).meta_window;
+        Main.activateWindow(dialog);
+        await waitFor(() => global.display.focus_window === dialog);
+        const frame = dialog.get_frame_rect();
+        const {start, end} = JSON.parse(new TextDecoder().decode(request.load_contents(null)[1]));
+        pointer.notify_absolute_motion(GLib.get_monotonic_time(), frame.x + start[0], frame.y + start[1]);
+        await Scripting.sleep(80);
+        pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.PRESSED);
+        await Scripting.sleep(80);
+        pointer.notify_absolute_motion(GLib.get_monotonic_time(), frame.x + end[0], frame.y + end[1]);
+        await Scripting.sleep(80);
+        pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.RELEASED);
+        await Scripting.sleep(100);
+        const screenshot = GLib.getenv('SUPER_V_OCR_SCREENSHOT');
+        if (screenshot && action === 'drag' && locale === 'en') {
+            const stream = Gio.File.new_for_path(screenshot).replace(null, false, Gio.FileCreateFlags.PRIVATE, null);
+            await new Shell.Screenshot().screenshot_area(frame.x, frame.y, frame.width, frame.height, stream);
+            stream.close(null);
+        }
+        Gio.File.new_for_path(`${GLib.getenv('XDG_STATE_HOME')}/ocr-${action}-done`).replace_contents('done', null, false,
+            Gio.FileCreateFlags.PRIVATE, null);
+    }
     const editorOutput = await editorPending;
     if (!editorDriver.get_successful())
         throw new Error(`Editor check failed: ${editorOutput[2]}`);
@@ -171,7 +196,7 @@ export async function run() {
         check('unchanged clipboard panel becomes visible on every reopen', popup._panel.opacity === 255);
         popup._setTab('emoji');
         await Scripting.sleep(300);
-        check('loaded version is visible', popup._title.text === 'Super V 0.1.13');
+        check('loaded version is visible', popup._title.text === 'Super V 0.1.14');
         check('six equally sized emoji per row', popup._rows.length === 60 &&
             popup.list.get_first_child().get_n_children() === 6);
         const cells = popup._rows.slice(0, 7).map(rectangle);
@@ -509,6 +534,14 @@ export async function run() {
         await Scripting.sleep(100);
         check('screen pin renders a native image above application windows', pin.image.content && pin.root.visible && pin.root.width >= 240);
         const clickActor = async actor => {
+            // Screenshot selection can leave its fading actor above a pin for
+            // a frame. Wait until a real pointer click can reach the control.
+            await waitFor(() => {
+                const bounds = rectangle(actor);
+                const picked = global.stage.get_actor_at_pos(Clutter.PickMode.REACTIVE,
+                    bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+                return picked && actor.contains(picked);
+            });
             const bounds = rectangle(actor);
             pointer.notify_absolute_motion(GLib.get_monotonic_time(), bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
             await Scripting.sleep(50);
@@ -571,6 +604,7 @@ export async function run() {
             extension.screenPins.items.has(pinId) && (await extension.clipboard.readImage())?.mime === 'image/png');
         extension.settings.set_boolean('edit-after-screenshot', previousAutoEdit);
         await clickActor(pin.close);
+        await waitFor(() => !extension.screenPins.items.has(pinId));
         check('physical Close click removes the overlay and releases its budget',
             !extension.screenPins.items.size && !extension.screenPins.budget.items.size && !extension.screenPins.grab);
         const beginPinDrag = async reference => {

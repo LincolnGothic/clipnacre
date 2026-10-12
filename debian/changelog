@@ -1,3 +1,11 @@
+super-v-ubuntu (0.1.14) unstable; urgency=medium
+
+  * Add visual screenshot OCR with word highlights and click/drag selection.
+  * Review and edit selected text, restore all text, and copy Unicode selections.
+  * Bound OCR geometry and output, cancel stale work, and localize the controls.
+
+ -- Super V Ubuntu contributors <super-v-ubuntu@users.noreply.github.com>  Mon, 12 Oct 2026 03:45:00 -0700
+
 super-v-ubuntu (0.1.13) unstable; urgency=medium
 
   * Freeze screenshot pixels before opening area selection, preserving popups.
