@@ -1046,3 +1046,9 @@ msgstr "↑↓ Seleccionar · Enter Pegar · Esc Cerrar · Ctrl+Tab Cambiar"
 
 msgid "↑↓←→ Select · Enter Paste · Ctrl+F Search · Esc Close"
 msgstr "↑↓←→ Seleccionar · Enter Pegar · Ctrl+F Buscar · Esc Cerrar"
+
+msgid "Select all text"
+msgstr "Seleccionar todo el texto"
+
+msgid "Click or drag over the image to select text. Edit the result before copying."
+msgstr "Haz clic o arrastra sobre la imagen para seleccionar texto. Edita el resultado antes de copiarlo."

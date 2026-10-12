@@ -12,46 +12,47 @@ GPL-3.0-or-later; Unicode data uses Unicode-3.0.
 [Español](docs/i18n/README.es.md) · [Français](docs/i18n/README.fr.md) ·
 [한국어](docs/i18n/README.ko.md)
 
-**Current release: [v0.1.13](https://github.com/LincolnGothic/super-v-ubuntu/releases/tag/v0.1.13)** ·
-[Download installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb) ·
+**Current release: [v0.1.14](https://github.com/LincolnGothic/super-v-ubuntu/releases/tag/v0.1.14)** ·
+[Download installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb) ·
 [First installation](#install-the-debian-package) · [Upgrade](#upgrade-from-an-older-version) ·
 [Feature guide](#use-v0113) · [Troubleshooting](#troubleshooting)
 
 **Release status:** automated logic, package, and isolated GNOME Wayland checks
 are available. Image capture, native screenshot capture, and GTK image paste
 are covered by the isolated tests. Full application and desktop acceptance is
-tracked in [testing](docs/testing.md). See [v0.1.13 validation](docs/verification-v0.1.13.md).
+tracked in [testing](docs/testing.md). See [v0.1.14 validation](docs/verification-v0.1.14.md).
 
 ## Platforms and downloads
 
 | Desktop / Wayland session | x86-64 and ARM64 installer |
 | --- | --- |
-| Ubuntu 24.04 LTS / GNOME 46 | [Ubuntu 24.04 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_ubuntu24.04_all.deb) |
-| Ubuntu 26.04 LTS / GNOME 50 | [Ubuntu 26.04 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_ubuntu26.04_all.deb) |
-| Debian 13 / GNOME 48 | [Debian 13 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_debian13_all.deb) |
+| Ubuntu 24.04 LTS / GNOME 46 | [Ubuntu 24.04 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_ubuntu24.04_all.deb) |
+| Ubuntu 26.04 LTS / GNOME 50 | [Ubuntu 26.04 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_ubuntu26.04_all.deb) |
+| Debian 13 / GNOME 48 | [Debian 13 package](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_debian13_all.deb) |
 
 Choose your distribution's package. Each installer is marked **Architecture: all**
 because the extension uses JavaScript, translations, and schemas; it has no compiled
 CPU-specific binary. The same installer works on **amd64 (x86-64)** and **arm64
 (AArch64)** and uses the distribution's native GJS, GTK, and Tesseract packages.
 CI builds and runs the native Wayland tests separately on all six distribution/CPU
-combinations. An [all-target installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb)
+combinations. An [all-target installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)
 is also available; it allows GNOME 46, 48, or 50. Distribution installers restrict
 the GNOME dependency to their tested major version.
 
 Check `dpkg --print-architecture` and `gnome-shell --version` before installation.
 GNOME 47, 49, 51+, X11, and non-GNOME desktops are not supported. API inspection
 and isolated runtime results are recorded in [the API audit](docs/api-audit.md)
-and [v0.1.13 verification](docs/verification-v0.1.13.md). Interactive desktop acceptance
+and [v0.1.14 verification](docs/verification-v0.1.14.md). Interactive desktop acceptance
 remains distinct from these automated checks. No Electron, background daemon, or
 `xdotool` is needed.
 
-v0.1.13 freezes the desktop when Super+Shift+S starts, preserving notifications
-and menus while you select an area. Clipboard history recognizes image MIME
-aliases and mislabeled PNG/JPEG data, converts supported BMP/WebP pixels, and
-imports one copied local image file. See [validation](docs/verification-v0.1.13.md).
+v0.1.14 adds visual text recognition to the screenshot editor. Recognized words
+are highlighted over the image; click a word or drag across a region, review and
+edit the selected text, then copy it. **Select all text** restores the full result.
+Recognition runs locally, including mixed Chinese/English with installed language
+packs. See [validation](docs/verification-v0.1.14.md).
 
-## Use v0.1.13
+## Use v0.1.14
 
 Open **Super+V**, then click the gear button in the header to open Settings.
 
@@ -63,7 +64,7 @@ Open **Super+V**, then click the gear button in the header to open Settings.
 | Pin an image above your apps | Open its editor and click **Pin to screen**. Drag the image or empty header space; use +/−, the wheel, opacity, or × to close. Escape closes a pin during a drag. New screenshots work while references stay pinned. |
 | Number steps in a screenshot | Choose **Numbered marker** and click the image; numbers advance automatically. |
 | Change an existing annotation | Choose **Select annotation**, drag to move, use the bottom-right handle to resize, or press Delete. |
-| Copy text from an image | Click **Copy text from image** in the editor, select an installed OCR language, review the editable result, and copy it. |
+| Copy text from an image | Click **Copy text from image** in the editor, select an installed OCR language, click or drag over highlighted words, review the editable result, and copy it. **Select all text** restores the full result. |
 | Set screenshot export defaults | **Settings → Screenshot export and OCR** controls the folder, filename pattern, and preferred OCR language. |
 | Choose whether the editor opens automatically | **Settings → Desktop integration → Edit after taking a screenshot** (on by default). |
 | Change the screenshot shortcut | **Settings → Desktop integration → Screenshot shortcut (GTK accelerator syntax)**. Enter a shortcut such as `<Super><Shift>s` and apply it; an empty field disables the shortcut. |
@@ -126,12 +127,12 @@ clipboard items and bundled emoji. Full desktop acceptance is tracked in
 
 Already using Super V? Follow [Upgrade from an older version](#upgrade-from-an-older-version).
 
-Download [`super-v-ubuntu_0.1.13_all.deb`](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb)
-from [release v0.1.13](https://github.com/LincolnGothic/super-v-ubuntu/releases/tag/v0.1.13),
+Download [`super-v-ubuntu_0.1.14_all.deb`](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)
+from [release v0.1.14](https://github.com/LincolnGothic/super-v-ubuntu/releases/tag/v0.1.14),
 then open a terminal in the folder containing the downloaded file and run:
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.13_all.deb
+sudo apt install ./super-v-ubuntu_0.1.14_all.deb
 ```
 
 **Save your work, log out, and log back in** so GNOME discovers the system
@@ -150,7 +151,7 @@ It replaces any custom notification shortcut. To restore GNOME's defaults,
 run `gsettings reset org.gnome.shell.keybindings toggle-message-tray` after
 disabling this extension.
 
-Press **Super+V**; the header should show **Super V 0.1.13**. Capture begins after
+Press **Super+V**; the header should show **Super V 0.1.14**. Capture begins after
 extension initialization, with a default
 100-entry limit and persistent history. Change preferences to pause capture,
 disable persistence or automatic paste, and choose another shortcut.
@@ -159,17 +160,17 @@ Enabling this extension grants it access to clipboard text and images; read
 
 ## Upgrade from an older version
 
-1. Download the [v0.1.13 installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.13/super-v-ubuntu_0.1.13_all.deb).
+1. Download the [v0.1.14 installer](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb).
 2. Open a terminal in the download's folder and run the command below. Installing
    it over the previous package upgrades Super V; no uninstall is needed.
 
    ```sh
-   sudo apt install ./super-v-ubuntu_0.1.13_all.deb
+   sudo apt install ./super-v-ubuntu_0.1.14_all.deb
    ```
 
 3. **Save your work, log out, and log back in.** On Wayland, GNOME keeps the
    extension's previous code loaded until you start a new session.
-4. Press **Super+V** and check that the header shows **Super V 0.1.13**. Your
+4. Press **Super+V** and check that the header shows **Super V 0.1.14**. Your
    language and shortcut settings remain. Saved text history, pins, and emoji
    recents migrate; history configured to clear at logout is erased as requested.
 
@@ -181,8 +182,8 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-The package should report **0.1.13**; the extension's **Version** should also
-report **0.1.13** (the internal extension number is 14). If the package is new but
+The package should report **0.1.14**; the extension's **Version** should also
+report **0.1.14** (the internal extension number is 15). If the package is new but
 GNOME still reports an old version, log out/in before reinstalling.
 
 The extension's **Path** should be
@@ -359,14 +360,27 @@ requires opening its image from history again.
 
 ## Copy text from an image
 
-Click **Copy text from image** in the editor (or press **Ctrl+Shift+O**). Tesseract recognizes the edited,
-cropped image locally, then opens an editable result. Choose an installed language
-and click **Recognize text** to run again; **Copy text** copies the full result,
-while Ctrl+C copies a selection when one exists. Recognition can make mistakes;
-review the result before using it. Empty results are reported without replacing
-the clipboard. Work is cancelled when the dialog/editor closes, and each run has
-a 30-second timeout and a 64 KiB text limit. OCR image data passes through anonymous
-pipes without scratch images, accounts, network requests, or cloud services.
+Click the visible **Copy text from image** button in the editor (or press
+**Ctrl+Shift+O**). Tesseract recognizes the edited, cropped image locally and
+highlights its words in a preview above the editable result.
+
+- Click a highlighted word or drag across a region to extract just those words,
+  in reading order. The image and annotations stay intact.
+- Edit the extracted text, then click **Copy text** or press **Ctrl+C**. A selected
+  range in the text field is copied when one exists; otherwise the entire field
+  is copied. Empty or oversized results leave the clipboard unchanged.
+- Click **Select all text** to restore all recognized words. This replaces edits
+  in the result field with the original recognition.
+- Choose an installed language and click **Recognize text** to run again. Close
+  the dialog to cancel a running recognition.
+
+![Visual screenshot OCR with two words selected and extracted](docs/screenshots/ocr-v0.1.14.png)
+
+Recognition can make mistakes; review the result before using it. Work is cancelled
+when the dialog/editor closes. Each run has a 30-second total timeout, a 64 KiB text
+limit, a 512 KiB geometry-output limit and at most 4,096 word highlights. Image
+data passes through anonymous pipes without scratch images, accounts, network
+requests, or cloud services.
 
 English OCR is installed with the package. Add other recognition languages with:
 
@@ -466,7 +480,7 @@ sudo apt install build-essential debhelper libglib2.0-bin nodejs python3 gettext
     gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gdkpixbuf-2.0 lintian git gh
 make test
 make package
-lintian --fail-on error,warning ../super-v-ubuntu_0.1.13_all.deb
+lintian --fail-on error,warning ../super-v-ubuntu_0.1.14_all.deb
 ```
 
 No npm dependencies or runtime downloads are required. Debian's build invokes

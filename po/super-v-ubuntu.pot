@@ -87,6 +87,9 @@ msgstr ""
 msgid "Clear unpinned history"
 msgstr ""
 
+msgid "Click or drag over the image to select text. Edit the result before copying."
+msgstr ""
+
 msgid "Click the image to move the text box. Press Enter to finish."
 msgstr ""
 
@@ -462,6 +465,9 @@ msgid "Search kaomoji"
 msgstr ""
 
 msgid "Search symbols"
+msgstr ""
+
+msgid "Select all text"
 msgstr ""
 
 msgid "Select annotation"

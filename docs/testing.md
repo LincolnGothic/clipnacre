@@ -5,16 +5,16 @@ emoji generation, ESLint, Node logic/adapter tests, and GJS/Gio filesystem
 integration. Mock adapter tests exercise the actual asynchronous controller
 and clipboard modules, but do not prove Mutter clipboard, shell rendering or
 input delivery works on a real desktop. CI builds the `.deb` and checks it
-without an interactive shell. See `verification-v0.1.12.md` for current executed results.
+without an interactive shell. See `verification-v0.1.14.md` for current executed results.
 
 ## Package checks
 
 ```sh
 make package
-lintian --fail-on error,warning ../super-v-ubuntu_0.1.12_all.deb
-dpkg-deb --info ../super-v-ubuntu_0.1.12_all.deb
-dpkg-deb --contents ../super-v-ubuntu_0.1.12_all.deb
-python3 scripts/audit-package.py ../super-v-ubuntu_0.1.12_all.deb
+lintian --fail-on error,warning ../super-v-ubuntu_0.1.14_all.deb
+dpkg-deb --info ../super-v-ubuntu_0.1.14_all.deb
+dpkg-deb --contents ../super-v-ubuntu_0.1.14_all.deb
+python3 scripts/audit-package.py ../super-v-ubuntu_0.1.14_all.deb
 ```
 
 The archive must contain runtime files and compiled schemas only beneath
@@ -33,7 +33,7 @@ a backup if it contains local changes.
 ```sh
 gnome-shell --version
 printf '%s\n' "$XDG_SESSION_TYPE"
-sudo apt install ./super-v-ubuntu_0.1.12_all.deb
+sudo apt install ./super-v-ubuntu_0.1.14_all.deb
 ```
 
 Log out/in, then enable and inspect it as your desktop user:
@@ -101,7 +101,7 @@ Record any custom notification bindings first; the command replaces them.
     entries or cause shell exceptions. Test light/dark themes, 100%/200% scale,
     multiple monitors, long previews, scrolling beyond 60 results and keyboard
     navigation through incrementally rendered results.
-11. Confirm the header reads Super V 0.1.12. With Near last click selected,
+11. Confirm the header reads Super V 0.1.14. With Near last click selected,
     click an input, move the pointer away, and open beside the remembered point.
     Drag the title bar to each edge, then check Settings and Screenshot clicks.
     Check work-area bounds,
@@ -189,6 +189,23 @@ Additional interactive checks:
 
 Automated checks do not establish hardware GPU behavior, all receiving apps,
 OCR accuracy on arbitrary documents, or interactive monitor/lock acceptance.
+
+## v0.1.14 visual OCR
+
+- Capture a screenshot, open **Copy text from image**, and confirm the preview
+  matches the current crop and annotations. OCR highlights must not appear in
+  PNG exports or alter the original image.
+- Click one highlighted word and drag forward/backward over a region. The text
+  field must show just the intersected words, in reading order. Click **Select
+  all text** to restore the original result.
+- Edit the result with Chinese and emoji, select a range, and use **Copy text**
+  and Ctrl+C. Both copy the selected range, or the complete field if there is no
+  selection. Empty/oversized results leave the clipboard alone.
+- Rerun with another installed language; old results disappear during recognition.
+  Close while loading languages or recognizing, then reopen. Late results must
+  not reach the closed window or clipboard.
+- Check the seven interface languages, small windows and 100%/200% scaling.
+  Use the text field and buttons with the keyboard and a screen reader.
 
 ## v0.1.13 regressions
 

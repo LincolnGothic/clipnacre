@@ -1046,3 +1046,9 @@ msgstr "↑↓ 선택 · Enter 붙여넣기 · Esc 닫기 · Ctrl+Tab 전환"
 
 msgid "↑↓←→ Select · Enter Paste · Ctrl+F Search · Esc Close"
 msgstr "↑↓←→ 선택 · Enter 붙여넣기 · Ctrl+F 검색 · Esc 닫기"
+
+msgid "Select all text"
+msgstr "모든 텍스트 선택"
+
+msgid "Click or drag over the image to select text. Edit the result before copying."
+msgstr "이미지를 클릭하거나 드래그하여 텍스트를 선택하세요. 복사하기 전에 결과를 편집할 수 있습니다."

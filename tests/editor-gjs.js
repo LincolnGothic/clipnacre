@@ -215,6 +215,50 @@ GLib.timeout_add(GLib.PRIORITY_DEFAULT, 300, () => {
             check(ocrEditor.ocrCopy.sensitive, `Local OCR failed: ${ocrEditor.ocrStatus.label}`);
             ocrEditor.ocrCopy.emit('clicked');
             check(copiedText.includes('SUPER V LOCAL OCR'), 'OCR did not recognize and copy synthetic text');
+            const preview = ocrEditor.ocrPreview;
+            check(preview.words.length >= 4, 'OCR word geometry is missing');
+            for (const action of ['click', 'drag']) {
+                await new Promise(resolve => GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+                    resolve(); return GLib.SOURCE_REMOVE;
+                }));
+                const [valid, bounds] = preview.area.compute_bounds(ocrEditor.ocrDialog);
+                check(valid && preview.area.get_width() > 200, 'OCR preview is not visible');
+                const t = preview.transform();
+                const first = preview.words[0], second = preview.words[1];
+                const point = (x, y) => [bounds.origin.x + t.x + x * t.scale, bounds.origin.y + t.y + y * t.scale];
+                const start = action === 'click' ? point(first.x + first.width / 2, first.y + first.height / 2)
+                    : point(first.x - 2, first.y - 2);
+                const end = action === 'click' ? start : point(second.x + second.width + 2,
+                    Math.max(first.y + first.height, second.y + second.height) + 2);
+                const request = Gio.File.new_for_path(`${GLib.getenv('XDG_STATE_HOME')}/ocr-${action}-probe.json`);
+                const done = Gio.File.new_for_path(`${GLib.getenv('XDG_STATE_HOME')}/ocr-${action}-done`);
+                request.replace_contents(JSON.stringify({start, end}), null, false, Gio.FileCreateFlags.PRIVATE, null);
+                await new Promise((resolve, reject) => {
+                    let ticks = 0;
+                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 50, () => {
+                        if (done.query_exists(null)) { resolve(); return GLib.SOURCE_REMOVE; }
+                        if (++ticks > 100) { reject(new Error('OCR pointer selection timed out')); return GLib.SOURCE_REMOVE; }
+                        return GLib.SOURCE_CONTINUE;
+                    });
+                });
+                check(preview.selected.length === (action === 'click' ? 1 : 2), `Physical OCR ${action} selected the wrong words`);
+                ocrEditor.ocrCopy.emit('clicked');
+                check(copiedText === (action === 'click' ? first.text : `${first.text} ${second.text}`),
+                    'Copy did not use the selected OCR words');
+                request.delete(null); done.delete(null);
+            }
+            ocrEditor.ocrSelectAll.emit('clicked');
+            check(preview.selected.length === preview.words.length, 'Select all did not restore the full result');
+            ocrEditor.ocrBuffer.set_text('Edited 你好 👩🏽‍🔬', -1);
+            ocrEditor.ocrCopy.emit('clicked');
+            check(copiedText === 'Edited 你好 👩🏽‍🔬', 'Copy ignored editable OCR text');
+            ocrEditor.ocrBuffer.select_range(ocrEditor.ocrBuffer.get_iter_at_offset(7), ocrEditor.ocrBuffer.get_iter_at_offset(9));
+            ocrEditor.ocrCopy.emit('clicked');
+            check(copiedText === '你好', 'Copy ignored the Unicode text selection');
+            ocrEditor.ocrBuffer.set_text('', -1);
+            check(!ocrEditor.ocrCopy.sensitive, 'Empty OCR text enabled copying');
+            ocrEditor.ocrBuffer.set_text('x'.repeat(65537), -1);
+            check(!ocrEditor.ocrCopy.sensitive, 'Oversized edited OCR text enabled copying');
             const installed = await ocrEditor.ocr.languages(null);
             for (const [language, text, expected] of [
                 ['chi_sim', '简体中文 文字识别', '简体中文'], ['chi_tra', '繁體中文 文字辨識', '繁體中文'],
@@ -222,11 +266,32 @@ GLib.timeout_add(GLib.PRIORITY_DEFAULT, 300, () => {
                 ['spa', 'Texto español', 'español'], ['fra', 'Texte français', 'français'],
             ]) {
                 if (!installed.includes(language)) continue;
-                const result = await ocrEditor.ocr.recognize(ocrSample(text, language), language, installed, null);
-                check(result.replace(/\s/gu, '').includes(expected), `${language}: synthetic recognition failed (${result})`);
+                const result = await ocrEditor.ocr.recognizeDetailed(ocrSample(text, language), language, installed, null);
+                check(result.text.replace(/\s/gu, '').includes(expected), `${language}: synthetic recognition failed (${result.text})`);
+                check(result.words.length > 0, `${language}: synthetic word geometry is missing`);
             }
             ocrEditor.ocrDialog.close();
             check(!ocrEditor.ocrDialog && ocrEditor.ocrCancel.is_cancelled(), 'Closing OCR did not cancel work');
+            check(!preview.pixbuf && !preview.words.length, 'Closing OCR retained its image or text geometry');
+            let pendingResolve, pendingCancel;
+            const realEngine = ocrEditor.ocr;
+            ocrEditor.ocr = {program: true, languages: async () => ['eng'],
+                recognizeDetailed: (_bytes, _language, _installed, cancel) => {
+                    pendingCancel = cancel;
+                    return new Promise(resolve => { pendingResolve = resolve; });
+                }};
+            const pending = ocrEditor.recognizeText();
+            await new Promise(resolve => GLib.timeout_add(GLib.PRIORITY_DEFAULT, 20, () => {
+                resolve(); return GLib.SOURCE_REMOVE;
+            }));
+            check(!ocrEditor.ocrCopy.sensitive && !ocrEditor.ocrRun.sensitive, 'OCR controls stayed active during recognition');
+            const stalePreview = ocrEditor.ocrPreview;
+            ocrEditor.ocrDialog.close();
+            check(pendingCancel.is_cancelled(), 'Closing during recognition did not cancel the request');
+            pendingResolve({text: 'Late result', words: preview.words});
+            await pending;
+            check(!ocrEditor.ocrDialog && !stalePreview.pixbuf && copiedText === '你好', 'Late OCR result escaped a closed dialog');
+            ocrEditor.ocr = realEngine;
         } finally { ocrEditor.window.close(); }
         const jpeg = decodeImage(GLib.base64_decode(fixtures.jpeg), 'image/jpeg');
         check(jpeg.width === 64 && jpeg.height === 48, 'JPEG input failed');
