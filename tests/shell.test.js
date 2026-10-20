@@ -510,7 +510,12 @@ export async function run() {
                     check('overview capture retains the selected dimensions',
                         image.get_width() === 31 && image.get_height() === 21);
                     // PNG encoders may attach a different creation timestamp.
-                    return image.get_pixels();
+                    // Row padding is not image data and may be uninitialized.
+                    const data = image.get_pixels(), result = [];
+                    const stride = image.get_rowstride(), rowBytes = 31 * image.get_n_channels();
+                    for (let row = 0; row < 21; row++)
+                        result.push(...data.slice(row * stride, row * stride + rowBytes));
+                    return result;
                 };
                 const actualPixels = pixels(captured), expectedPixels = pixels(expected);
                 check('application grid capture exports the frozen PNG pixels',

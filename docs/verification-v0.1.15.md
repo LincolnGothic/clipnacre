@@ -30,11 +30,13 @@ Executed locally on GNOME Shell 50.1:
   all 210 Node tests, native GJS integration and 17 Gettext/regional checks.
 - All 348 messages remain complete in the six translated catalogs.
 - The universal and Ubuntu 26.04 installers pass the package audit.
-- Focused native overview checks pass, including frozen pixels, cancellation,
-  custom bindings and automatic editor presentation.
+- Complete English native Wayland suites pass at 1280×960 and in the 1280×720
+  placement/interaction session, including frozen overview pixels, cancellation,
+  custom bindings, automatic editor presentation and the existing screenshot,
+  clipboard, local OCR and screen-pin workflows.
 - A full native run timed out later waiting for the existing screenshot editor
   while a package build was running. The overview checks had passed; the final
-  full native check runs separately from packaging.
+  full native checks passed separately from packaging.
 
 The CI pipeline
 requires Ubuntu 24.04 / GNOME 46, Ubuntu 26.04 / GNOME 50, and Debian 13 / GNOME 48
