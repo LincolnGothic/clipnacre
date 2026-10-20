@@ -372,6 +372,7 @@ async function controller() {
     const texture = {get_width: () => 16384, get_height: () => 16384};
     const content = {get_texture: () => texture};
     const main = {texture, content, selectors: [], notify() {}, sessionMode: {isLocked: false, isGreeter: false},
+        overview: {hide() { main.overviewHidden = true; }},
         screenshotUI: {connect(name, handler) { signals.set(++signalId, {name, handler}); return signalId; },
             disconnect(id) { signals.delete(id); },
             emit(name) { for (const signal of [...signals.values()]) if (signal.name === name) signal.handler(); },
@@ -624,6 +625,7 @@ for (const outcome of ['capture', 'cancel', 'disabled setting', 'clear', 'lock']
         if (outcome === 'lock') { main.sessionMode.isLocked = true; c._cancelScreenshot(); }
         await settle(); tick(); await settle();
         assert.equal(editors.length, outcome === 'capture' ? 1 : 0);
+        assert.equal(!!main.overviewHidden, outcome === 'capture');
         assert.equal(writes.length, ['capture', 'disabled setting'].includes(outcome) ? 1 : 0);
         if (outcome === 'capture') assert.deepEqual(main.area, [5, 7, 64, 48]);
     });

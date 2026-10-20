@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.15 — 2026-10-19
+
+- Fix Super+Shift+S being ignored after opening Ubuntu Show Applications, the window overview or overview search.
+- Allow the configured screenshot shortcut in GNOME's overview action mode, preserving the visible overview in the frozen snapshot.
+- Present the automatic screenshot editor by leaving the overview after successful capture; cancellation keeps the overview open.
+- Add real Wayland keyboard and pointer checks for overview capture, exported pixels, Escape cancellation, automatic editor visibility and a custom shortcut.
+
 ## 0.1.14 — 2026-10-12
 
 - Make screenshot text recognition visible in the editor toolbar. Show the edited screenshot with word highlights above the editable result.

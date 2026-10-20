@@ -196,7 +196,7 @@ export async function run() {
         check('unchanged clipboard panel becomes visible on every reopen', popup._panel.opacity === 255);
         popup._setTab('emoji');
         await Scripting.sleep(300);
-        check('loaded version is visible', popup._title.text === 'Super V 0.1.14');
+        check('loaded version is visible', popup._title.text === 'Super V 0.1.15');
         check('six equally sized emoji per row', popup._rows.length === 60 &&
             popup.list.get_first_child().get_n_children() === 6);
         const cells = popup._rows.slice(0, 7).map(rectangle);
@@ -456,6 +456,101 @@ export async function run() {
         extension.enable();
         await waitFor(() => extension._ready);
         check('real extension registers both shortcuts', extension._binding && extension._screenshotBinding);
+        // Exercise real key events: calling takeScreenshot() directly would miss
+        // a binding that GNOME filters out while Show Applications is open.
+        const beforeOverviewAutoEdit = extension.settings.get_boolean('edit-after-screenshot');
+        extension.settings.set_boolean('edit-after-screenshot', false);
+        for (const view of ['windows', 'applications', 'search']) {
+            if (view === 'applications') Main.overview.showApps();
+            else Main.overview.show();
+            await waitFor(() => Main.overview.visible && Main.actionMode === Shell.ActionMode.OVERVIEW);
+            if (view === 'search') {
+                Main.overview.searchEntry.set_text('settings');
+                await Scripting.sleep(150);
+            }
+            const count = extension.history.entries.length;
+            const accelerator = view === 'search'
+                ? [Clutter.KEY_Control_L, Clutter.KEY_Shift_L, Clutter.KEY_F12]
+                : [Clutter.KEY_Super_L, Clutter.KEY_Shift_L, Clutter.KEY_s];
+            if (view === 'search')
+                extension.settings.set_strv('take-screenshot', ['<Control><Shift>F12']);
+            // Mutter rebuilds accelerator grabs after the settings notification.
+            await Scripting.sleep(100);
+            for (const key of accelerator)
+                keyboard.notify_keyval(GLib.get_monotonic_time(), key, Clutter.KeyState.PRESSED);
+            for (const key of [...accelerator].reverse())
+                keyboard.notify_keyval(GLib.get_monotonic_time(), key, Clutter.KeyState.RELEASED);
+            await waitFor(() => extension._areaCapture?.visible);
+            check(`actual screenshot shortcut opens over ${view} overview`,
+                Main.overview.visible && !!extension._areaCapture.get_content());
+            if (view === 'applications') {
+                // Make the live scene change after freezing it. Export must use
+                // the frozen application grid rather than the desktop behind it.
+                const texture = extension._areaCapture.get_content().get_texture();
+                const reference = Gio.MemoryOutputStream.new_resizable();
+                await Shell.Screenshot.composite_to_stream(texture, 200, 200, 31, 21,
+                    1, null, 0, 0, 1, reference);
+                reference.close(null);
+                const expected = reference.steal_as_bytes().get_data();
+                Main.overview.hide();
+                await Scripting.sleep(100);
+                pointer.notify_absolute_motion(GLib.get_monotonic_time(), 200, 200);
+                await Scripting.sleep(50);
+                pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.PRESSED);
+                await Scripting.sleep(50);
+                pointer.notify_absolute_motion(GLib.get_monotonic_time(), 230, 220);
+                await Scripting.sleep(50);
+                pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.RELEASED);
+                await waitFor(() => !extension._areaCapture && extension.history.entries.length > count);
+                const captured = (await extension.clipboard.readImage())?.bytes;
+                const pixels = bytes => {
+                    const loader = GdkPixbuf.PixbufLoader.new_with_mime_type('image/png');
+                    loader.write(bytes); loader.close();
+                    const image = loader.get_pixbuf();
+                    check('overview capture retains the selected dimensions',
+                        image.get_width() === 31 && image.get_height() === 21);
+                    // PNG encoders may attach a different creation timestamp.
+                    return image.get_pixels();
+                };
+                const actualPixels = pixels(captured), expectedPixels = pixels(expected);
+                check('application grid capture exports the frozen PNG pixels',
+                    actualPixels.length === expectedPixels.length &&
+                    actualPixels.every((byte, i) => byte === expectedPixels[i]));
+                extension.deleteEntry(extension.history.entries[0].id);
+            } else {
+                keyboard.notify_keyval(GLib.get_monotonic_time(), Clutter.KEY_Escape, Clutter.KeyState.PRESSED);
+                keyboard.notify_keyval(GLib.get_monotonic_time(), Clutter.KEY_Escape, Clutter.KeyState.RELEASED);
+                await waitFor(() => !extension._areaCapture);
+                check(`cancelling capture preserves ${view} overview and history`,
+                    Main.overview.visible && extension.history.entries.length === count);
+            }
+            extension.settings.reset('take-screenshot');
+            Main.overview.hide();
+            await waitFor(() => !Main.overview.visible && Main.actionMode === Shell.ActionMode.NORMAL);
+        }
+        extension.settings.set_boolean('edit-after-screenshot', beforeOverviewAutoEdit);
+        Main.overview.showApps();
+        await waitFor(() => Main.overview.visible && Main.actionMode === Shell.ActionMode.OVERVIEW);
+        await Scripting.sleep(100);
+        for (const key of [Clutter.KEY_Super_L, Clutter.KEY_Shift_L, Clutter.KEY_s])
+            keyboard.notify_keyval(GLib.get_monotonic_time(), key, Clutter.KeyState.PRESSED);
+        for (const key of [Clutter.KEY_s, Clutter.KEY_Shift_L, Clutter.KEY_Super_L])
+            keyboard.notify_keyval(GLib.get_monotonic_time(), key, Clutter.KeyState.RELEASED);
+        await waitFor(() => extension._areaCapture?.visible);
+        pointer.notify_absolute_motion(GLib.get_monotonic_time(), 240, 240);
+        await Scripting.sleep(50);
+        pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.PRESSED);
+        await Scripting.sleep(50);
+        pointer.notify_absolute_motion(GLib.get_monotonic_time(), 280, 270);
+        await Scripting.sleep(50);
+        pointer.notify_button(GLib.get_monotonic_time(), 1, Clutter.ButtonState.RELEASED);
+        await waitFor(() => !Main.overview.visible && global.get_window_actors().some(actor =>
+            actor.meta_window.get_title() === _('Screenshot editor')));
+        check('completed application grid capture presents the automatic editor', !!extension.editor.child);
+        extension.editor.close();
+        await waitFor(() => !global.get_window_actors().some(actor =>
+            actor.meta_window.get_title() === _('Screenshot editor')));
+        extension.deleteEntry(extension.history.entries[0].id);
         const fixtures = JSON.parse(read('tests/fixtures/images.json'));
         const clipboard = St.Clipboard.get_default();
         for (const [format, mime] of [['png', 'image/png'], ['jpeg', 'image/jpeg']]) {

@@ -2,6 +2,8 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.15 では Ubuntu の「アプリケーションを表示」を開いた後にスクリーンショットのショートカットが反応しない問題を修正しました。Super+Shift+S はウィンドウ一覧とアプリ検索でも使えます。表示中の画面を保持し、Escape で選択をキャンセルできます。
+
 v0.1.14 ではスクリーンショットの文字認識が視覚的になりました。**Super+Shift+S** で撮影し、エディターの **画像からテキストをコピー**（**Ctrl+Shift+O**）を開きます。画像上の認識された単語をクリックするか、範囲をドラッグして選択し、結果を確認・編集してコピーできます。**すべてのテキストを選択** で認識結果全体に戻ります。OCR はローカルで動作し、英語はインストーラーに含まれます。日本語には `tesseract-ocr-jpn` をインストールして、認識ダイアログで日本語を選択してください。英語パックがあれば、選択した言語と一緒に混在したテキストを認識します。更新後は作業を保存し、ログアウトして再度ログインしてください。
 
 ![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
@@ -22,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 初回インストール
 
-[v0.1.14 のパッケージ](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)をダウンロードし、そのファイルがあるフォルダーで端末を開きます。
+[v0.1.15 のパッケージ](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.15/super-v-ubuntu_0.1.15_all.deb)をダウンロードし、そのファイルがあるフォルダーで端末を開きます。
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.14_all.deb
+sudo apt install ./super-v-ubuntu_0.1.15_all.deb
 ```
 
 インストール後に**作業を保存してログアウトし、再度ログイン**します。一般ユーザーで次のコマンドを実行します（sudo は使いません）。最初のコマンドは通知のショートカットを Super+M に設定し、Super+V をこの拡張機能に割り当てられるようにします。独自の通知ショートカットは置き換えられます。
@@ -36,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-**Super+V** を押すと、タイトルに **Super V 0.1.14** が表示されます。
+**Super+V** を押すと、タイトルに **Super V 0.1.15** が表示されます。
 
-## v0.1.14 への更新
+## v0.1.15 への更新
 
-上記のパッケージをダウンロードし、そのフォルダーで同じ apt コマンドを実行します。以前のパッケージに上書きして更新できるので、アンインストールは不要です。**作業を保存し、ログアウトして再度ログイン**した後、**Super+V** のタイトルが **Super V 0.1.14** になっていることを確認します。言語とショートカットの設定は保持され、保存済みのテキスト履歴、ピン留め項目、最近使った絵文字は引き継がれます。ログアウト時に消去する設定の履歴は、その設定に従って消去されます。
+上記のパッケージをダウンロードし、そのフォルダーで同じ apt コマンドを実行します。以前のパッケージに上書きして更新できるので、アンインストールは不要です。**作業を保存し、ログアウトして再度ログイン**した後、**Super+V** のタイトルが **Super V 0.1.15** になっていることを確認します。言語とショートカットの設定は保持され、保存済みのテキスト履歴、ピン留め項目、最近使った絵文字は引き継がれます。ログアウト時に消去する設定の履歴は、その設定に従って消去されます。
 
 一般ユーザーで、インストール済みパッケージと GNOME が読み込んでいるバージョンを確認します。
 
@@ -49,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-どちらも **0.1.14** と表示される必要があります（拡張機能の内部番号は 15）。パッケージだけが新版の場合は、まずログアウトして再度ログインしてください。システム版の Path は `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local` です。ホーム内のパスなら、その UUID のフォルダーをバックアップして拡張機能ディレクトリーの外へ移し、再度ログインします。Super+V が反応しなければ上記の enable コマンドを実行し、通知が開く場合は初回インストールの通知ショートカットを確認します。設定を開けない場合は `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local` を実行します。
+どちらも **0.1.15** と表示される必要があります（拡張機能の内部番号は 16）。パッケージだけが新版の場合は、まずログアウトして再度ログインしてください。システム版の Path は `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local` です。ホーム内のパスなら、その UUID のフォルダーをバックアップして拡張機能ディレクトリーの外へ移し、再度ログインします。Super+V が反応しなければ上記の enable コマンドを実行し、通知が開く場合は初回インストールの通知ショートカットを確認します。設定を開けない場合は `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local` を実行します。
 
-## v0.1.14 の設定ガイド
+## v0.1.15 の設定ガイド
 
 Super+V を開き、タイトル横の歯車ボタンから設定を開きます。
 
