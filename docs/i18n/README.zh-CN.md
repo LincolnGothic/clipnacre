@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
-v0.1.16 起，Super V Ubuntu 更名为 **ClipNacre**。Linux 安装包、扩展标识和历史数据路径保持兼容，可直接覆盖升级。macOS 版本尚在规划中，本次发布仅提供 Linux 安装包。
+v0.2.0 新增原生 **macOS 版 ClipNacre**，提供 Apple Silicon 和 Intel 的 DMG/ZIP，支持剪贴板历史、截图编辑、屏幕贴图及本地 OCR。所有公开安装包文件名现使用 clipnacre；Linux 内部软件包和数据路径保持兼容。Mac 版尚未经 Apple 公证，请阅读 [Mac 安装与权限指南](../macos.md)。
 
 v0.1.14 新增可视化截图文字识别。按 **Super+Shift+S** 截图，在编辑器中点击 **从图像复制文字**（或按 **Ctrl+Shift+O**），即可在图片上查看识别出的文字框。点击单个词或拖动选择一片区域，检查并编辑结果后复制；**选择全部文字** 可恢复完整识别结果。OCR 在本机运行，英文语言包随安装包提供；中文需安装 `tesseract-ocr-chi-sim` 或 `tesseract-ocr-chi-tra`，并在识别对话框中选择对应语言。已安装的英文语言包会与所选语言一起用于识别混合文字。升级后请保存工作、注销并重新登录。
 
@@ -24,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 首次安装
 
-下载 [v0.1.16 安装包](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb)，在安装包所在文件夹中打开终端：
+下载 [v0.2.0 安装包](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb)，在安装包所在文件夹中打开终端：
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.16_all.deb
+sudo apt install ./clipnacre_0.2.0_linux_all.deb
 ```
 
 安装后**保存工作、注销并重新登录**，再以普通用户运行以下命令（不使用 sudo）。第一个命令将通知快捷键设为 Super+M，为本应用释放 Super+V；它会替换自定义通知快捷键。
@@ -38,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-按 **Super+V**，标题应为 **ClipNacre 0.1.16**。
+按 **Super+V**，标题应为 **ClipNacre 0.2.0**。
 
-## 升级到 v0.1.16
+## 升级到 v0.2.0
 
-下载上面的安装包，在安装包所在文件夹中运行同一个 apt 命令，即可覆盖升级，无须先卸载。随后**保存工作、注销并重新登录**，再按 **Super+V** 检查标题是否为 **ClipNacre 0.1.16**。语言和快捷键设置会保留，已保存的文本历史、固定项目和最近使用的表情会迁移；设置为注销时清空的历史会按设置清空。
+下载上面的安装包，在安装包所在文件夹中运行同一个 apt 命令，即可覆盖升级，无须先卸载。随后**保存工作、注销并重新登录**，再按 **Super+V** 检查标题是否为 **ClipNacre 0.2.0**。语言和快捷键设置会保留，已保存的文本历史、固定项目和最近使用的表情会迁移；设置为注销时清空的历史会按设置清空。
 
 以普通用户检查安装包和 GNOME 当前加载的版本：
 
@@ -51,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-两个版本都应为 **0.1.16**（扩展内部编号为 17）。若安装包为新版而 GNOME 仍加载旧版，请先注销并重新登录。系统安装的 Path 应为 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向用户目录，请备份并将该 UUID 文件夹移到扩展目录之外，再注销登录。若 Super+V 没有反应，可运行上面的 enable 命令；若打开的是通知，检查首次安装中的通知快捷键命令。设置打不开时，可运行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
+两个版本都应为 **0.2.0**（扩展内部编号为 18）。若安装包为新版而 GNOME 仍加载旧版，请先注销并重新登录。系统安装的 Path 应为 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向用户目录，请备份并将该 UUID 文件夹移到扩展目录之外，再注销登录。若 Super+V 没有反应，可运行上面的 enable 命令；若打开的是通知，检查首次安装中的通知快捷键命令。设置打不开时，可运行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
 
-## v0.1.16 设置速查
+## v0.2.0 设置速查
 
 按 Super+V，点击标题栏的齿轮按钮打开“设置”。
 

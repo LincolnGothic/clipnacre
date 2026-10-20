@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
-v0.1.16부터 Super V Ubuntu의 이름이 **ClipNacre**로 변경됩니다. Linux 패키지 이름, 확장 기능 ID 및 기록 저장 경로는 호환성을 유지하므로 그대로 업그레이드할 수 있습니다. macOS 버전은 계획 중이며 이번 릴리스는 Linux 전용입니다.
+v0.2.0에서는 Apple Silicon 및 Intel용 네이티브 **macOS ClipNacre**를 DMG/ZIP으로 제공합니다. 클립보드 기록, 스크린샷 편집, 화면 이미지 고정 및 로컬 OCR을 지원하며 공개 파일 이름은 clipnacre로 통일했습니다. Linux 내부 패키지와 데이터 경로는 유지합니다. Mac 앱은 아직 Apple 공증을 받지 않았습니다. [Mac 설치 및 권한 안내](../macos.md)를 확인하세요.
 
 v0.1.14에는 스크린샷의 시각적 텍스트 인식이 추가되었습니다. **Super+Shift+S**로 캡처하고 편집기에서 **이미지에서 텍스트 복사**(**Ctrl+Shift+O**)를 여세요. 인식된 단어를 클릭하거나 영역을 드래그하여 선택한 뒤 결과를 검토·수정하고 복사할 수 있습니다. **모든 텍스트 선택**을 누르면 전체 인식 결과가 복원됩니다. OCR은 로컬에서 실행되며 영어는 설치 패키지에 포함됩니다. 한국어에는 `tesseract-ocr-kor`를 설치하고 인식 창에서 한국어를 선택하세요. 설치된 영어 팩은 선택한 언어와 함께 혼합 텍스트 인식에 사용됩니다. 업데이트 후 작업을 저장하고 로그아웃한 다음 다시 로그인하세요.
 
@@ -24,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 처음 설치
 
-[v0.1.16 패키지](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb)를 다운로드하고 파일이 있는 폴더에서 터미널을 여세요.
+[v0.2.0 패키지](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb)를 다운로드하고 파일이 있는 폴더에서 터미널을 여세요.
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.16_all.deb
+sudo apt install ./clipnacre_0.2.0_linux_all.deb
 ```
 
 설치 후 **작업을 저장하고 로그아웃한 다음 다시 로그인**하세요. 다음 명령은 일반 사용자로 실행합니다(sudo 사용 안 함). 첫 번째 명령은 알림 단축키를 Super+M으로 설정하여 Super+V를 사용할 수 있게 합니다. 기존 사용자 지정 알림 단축키는 변경됩니다.
@@ -38,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-**Super+V**를 누르면 제목에 **ClipNacre 0.1.16**이 표시되어야 합니다.
+**Super+V**를 누르면 제목에 **ClipNacre 0.2.0**이 표시되어야 합니다.
 
-## v0.1.16으로 업데이트
+## v0.2.0으로 업데이트
 
-위 패키지를 다운로드하고 해당 폴더에서 같은 apt 명령을 실행하세요. 이전 패키지를 덮어써서 업데이트하므로 먼저 제거할 필요가 없습니다. **작업을 저장하고 로그아웃한 다음 다시 로그인**한 뒤, **Super+V** 제목이 **ClipNacre 0.1.16**인지 확인하세요. 언어와 단축키 설정은 유지되며 저장된 텍스트 기록, 고정 항목 및 최근 이모지가 이전됩니다. 로그아웃 시 삭제하도록 설정한 기록은 해당 설정에 따라 삭제됩니다.
+위 패키지를 다운로드하고 해당 폴더에서 같은 apt 명령을 실행하세요. 이전 패키지를 덮어써서 업데이트하므로 먼저 제거할 필요가 없습니다. **작업을 저장하고 로그아웃한 다음 다시 로그인**한 뒤, **Super+V** 제목이 **ClipNacre 0.2.0**인지 확인하세요. 언어와 단축키 설정은 유지되며 저장된 텍스트 기록, 고정 항목 및 최근 이모지가 이전됩니다. 로그아웃 시 삭제하도록 설정한 기록은 해당 설정에 따라 삭제됩니다.
 
 일반 사용자로 설치된 패키지와 GNOME이 불러온 확장 기능의 버전을 확인하세요.
 
@@ -51,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-두 버전 모두 **0.1.16**이어야 합니다(확장 기능 내부 번호는 17). 패키지만 새 버전이면 먼저 로그아웃하고 다시 로그인하세요. 시스템 패키지의 Path는 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`입니다. 홈 폴더를 가리키면 해당 UUID 폴더를 백업하고 확장 기능 디렉터리 밖으로 옮긴 후 다시 로그인하세요. Super+V가 반응하지 않으면 위의 enable 명령을 실행하고, 알림을 열면 처음 설치의 알림 단축키 명령을 확인하세요. 설정을 직접 열려면 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`을 실행하세요.
+두 버전 모두 **0.2.0**이어야 합니다(확장 기능 내부 번호는 18). 패키지만 새 버전이면 먼저 로그아웃하고 다시 로그인하세요. 시스템 패키지의 Path는 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`입니다. 홈 폴더를 가리키면 해당 UUID 폴더를 백업하고 확장 기능 디렉터리 밖으로 옮긴 후 다시 로그인하세요. Super+V가 반응하지 않으면 위의 enable 명령을 실행하고, 알림을 열면 처음 설치의 알림 단축키 명령을 확인하세요. 설정을 직접 열려면 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`을 실행하세요.
 
-## v0.1.16 설정 안내
+## v0.2.0 설정 안내
 
 Super+V를 열고 제목 옆의 톱니바퀴 버튼을 눌러 설정을 여세요.
 

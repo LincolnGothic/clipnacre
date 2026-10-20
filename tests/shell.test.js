@@ -196,7 +196,7 @@ export async function run() {
         check('unchanged clipboard panel becomes visible on every reopen', popup._panel.opacity === 255);
         popup._setTab('emoji');
         await Scripting.sleep(300);
-        check('loaded version is visible', popup._title.text === 'ClipNacre 0.1.16');
+        check('loaded version is visible', popup._title.text === 'ClipNacre 0.2.0');
         check('six equally sized emoji per row', popup._rows.length === 60 &&
             popup.list.get_first_child().get_n_children() === 6);
         const cells = popup._rows.slice(0, 7).map(rectangle);

@@ -13,7 +13,7 @@ ranges = {'ubuntu24.04': (46, 47), 'debian13': (48, 49), 'ubuntu26.04': (50, 51)
 minimum, maximum = ranges[target]
 version = subprocess.check_output(['dpkg-deb', '-f', str(source), 'Version'], text=True).strip()
 assert subprocess.check_output(['dpkg-deb', '-f', str(source), 'Architecture'], text=True).strip() == 'all'
-destination = Path('artifacts') / f'super-v-ubuntu_{version}_{target}_all.deb'
+destination = Path('artifacts') / f'clipnacre_{version}_{target}_all.deb'
 destination.parent.mkdir(exist_ok=True)
 with tempfile.TemporaryDirectory(prefix='super-v-package-') as temporary:
     root = Path(temporary) / 'package'

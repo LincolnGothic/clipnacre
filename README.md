@@ -2,11 +2,11 @@
 
 **Clipboard, screenshots, and text—kept local.**
 
-A Windows-style **Super+V** clipboard and character picker for Ubuntu and Debian GNOME,
-with screenshot capture, image editing, floating image pins, and local text recognition.
-Keep and search text/image clipboard history, annotate screenshots, and click or drag
-over recognized words to extract, edit, and copy their text. Emoji, kaomoji, symbols,
-and local GIF favorites share the same keyboard-friendly popup.
+A native clipboard and character picker for **macOS** and **Ubuntu/Debian GNOME**,
+with screenshot capture, image editing, floating image pins and local text recognition.
+Keep and search text/image clipboard history, annotate screenshots, and select recognized
+words to extract, edit and copy text. Emoji, kaomoji, symbols and local GIF favorites
+share a keyboard-friendly picker. Open with **⌘⇧V on Mac** or **Super+V on GNOME**.
 
 Seven interface languages are included. Clipboard contents, images, and OCR stay
 on your computer; no account or cloud service is needed.
@@ -17,44 +17,44 @@ GPL-3.0-or-later; Unicode data uses Unicode-3.0.
 [Español](docs/i18n/README.es.md) · [Français](docs/i18n/README.fr.md) ·
 [한국어](docs/i18n/README.ko.md)
 
-**Current release: [v0.1.16](https://github.com/LincolnGothic/clipnacre/releases/tag/v0.1.16)** ·
-[Download installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb) ·
-[First installation](#install-the-debian-package) · [Upgrade](#upgrade-from-an-older-version) ·
+**Current release: [v0.2.0](https://github.com/LincolnGothic/clipnacre/releases/tag/v0.2.0)** ·
+[Download Linux installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb) ·
+[Mac installation](docs/macos.md) · [Linux installation](#install-the-debian-package) · [Upgrade](#upgrade-from-an-older-version) ·
 [Feature guide](#feature-guide) · [Screenshot OCR](#copy-text-from-an-image) · [Troubleshooting](#troubleshooting)
 
-**New in v0.1.16:** Super V Ubuntu is now **ClipNacre**, a platform-neutral
-name for the clipboard, screenshot editor, character picker, and local OCR tools.
-The Linux package name, extension ID, settings, and history paths stay compatible
-so existing installations can upgrade directly.
+**New in v0.2.0:** the native **ClipNacre for Mac** app is available for Apple Silicon
+and Intel, including screenshot editing and local Vision OCR. Public download filenames
+now use `clipnacre`, including the Linux installers. Existing Linux package and settings
+identifiers remain compatible for direct upgrades.
 
-**macOS:** a native Mac version is planned. This release provides the existing
-Ubuntu/Debian GNOME application; no Mac installer is available yet.
-
-The release pipeline tests all six distribution/CPU targets before publishing
-installers and `SHA256SUMS`. See [validation](docs/verification-v0.1.16.md)
-and [desktop acceptance](docs/testing.md) for coverage and limits.
+**Mac installation and permissions:** [read the Mac guide](docs/macos.md). Mac downloads
+are ad-hoc signed and **unnotarized**; Apple Developer ID credentials are not configured.
+The release waits for both Mac architectures and all six native Linux test targets.
+See [verification and limits](docs/verification-v0.2.0.md).
 
 ## Platforms and downloads
 
-| Desktop / Wayland session | x86-64 and ARM64 installer |
+| Platform | Downloads |
 | --- | --- |
-| Ubuntu 24.04 LTS / GNOME 46 | [Ubuntu 24.04 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_ubuntu24.04_all.deb) |
-| Ubuntu 26.04 LTS / GNOME 50 | [Ubuntu 26.04 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_ubuntu26.04_all.deb) |
-| Debian 13 / GNOME 48 | [Debian 13 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_debian13_all.deb) |
+| macOS 13+ / Apple Silicon | [DMG](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_macos_arm64.dmg) · [ZIP](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_macos_arm64.zip) |
+| macOS 13+ / Intel | [DMG](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_macos_x86_64.dmg) · [ZIP](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_macos_x86_64.zip) |
+| Ubuntu 24.04 LTS / GNOME 46 | [Ubuntu 24.04 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_ubuntu24.04_all.deb) |
+| Ubuntu 26.04 LTS / GNOME 50 | [Ubuntu 26.04 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_ubuntu26.04_all.deb) |
+| Debian 13 / GNOME 48 | [Debian 13 package](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_debian13_all.deb) |
 
-Choose your distribution's package. Each installer is marked **Architecture: all**
+For Linux, choose your distribution's package. Each `.deb` is marked **Architecture: all**
 because the extension uses JavaScript, translations, and schemas; it has no compiled
 CPU-specific binary. The same installer works on **amd64 (x86-64)** and **arm64
 (AArch64)** and uses the distribution's native GJS, GTK, and Tesseract packages.
 CI builds and runs the native Wayland tests separately on all six distribution/CPU
-combinations. An [all-target installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb)
+combinations. An [all-target installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb)
 is also available; it allows GNOME 46, 48, or 50. Distribution installers restrict
 the GNOME dependency to their tested major version.
 
-Check `dpkg --print-architecture` and `gnome-shell --version` before installation.
+On Linux, check `dpkg --print-architecture` and `gnome-shell --version` before installation.
 GNOME 47, 49, 51+, X11, and non-GNOME desktops are not supported. API inspection
 and isolated runtime results are recorded in [the API audit](docs/api-audit.md)
-and [v0.1.16 verification](docs/verification-v0.1.16.md). Interactive desktop acceptance
+and [v0.2.0 verification](docs/verification-v0.2.0.md). Interactive desktop acceptance
 remains distinct from these automated checks. No Electron, background daemon, or
 `xdotool` is needed.
 
@@ -73,6 +73,8 @@ is also used with your chosen language for mixed text. See the
 [OCR language setup and full guide](#copy-text-from-an-image).
 
 ## Feature guide
+
+The table below describes the GNOME edition. See the [Mac guide](docs/macos.md) for native Mac shortcuts, permissions and controls.
 
 Open **Super+V**, then click the gear button in the header to open Settings.
 
@@ -155,12 +157,12 @@ clipboard items and bundled emoji. Full desktop acceptance is tracked in
 
 Already using ClipNacre? Follow [Upgrade from an older version](#upgrade-from-an-older-version).
 
-Download [`super-v-ubuntu_0.1.16_all.deb`](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb)
-from [release v0.1.16](https://github.com/LincolnGothic/clipnacre/releases/tag/v0.1.16),
+Download [`clipnacre_0.2.0_linux_all.deb`](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb)
+from [release v0.2.0](https://github.com/LincolnGothic/clipnacre/releases/tag/v0.2.0),
 then open a terminal in the folder containing the downloaded file and run:
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.16_all.deb
+sudo apt install ./clipnacre_0.2.0_linux_all.deb
 ```
 
 **Save your work, log out, and log back in** so GNOME discovers the system
@@ -179,7 +181,7 @@ It replaces any custom notification shortcut. To restore GNOME's defaults,
 run `gsettings reset org.gnome.shell.keybindings toggle-message-tray` after
 disabling this extension.
 
-Press **Super+V**; the header should show **ClipNacre 0.1.16**. Capture begins after
+Press **Super+V**; the header should show **ClipNacre 0.2.0**. Capture begins after
 extension initialization, with a default
 100-entry limit and persistent history. Change preferences to pause capture,
 disable persistence or automatic paste, and choose another shortcut.
@@ -188,17 +190,17 @@ Enabling this extension grants it access to clipboard text and images; read
 
 ## Upgrade from an older version
 
-1. Download the [v0.1.16 installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb).
+1. Download the [v0.2.0 installer](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb).
 2. Open a terminal in the download's folder and run the command below. Installing
    it over the previous package upgrades ClipNacre; no uninstall is needed.
 
    ```sh
-   sudo apt install ./super-v-ubuntu_0.1.16_all.deb
+   sudo apt install ./clipnacre_0.2.0_linux_all.deb
    ```
 
 3. **Save your work, log out, and log back in.** On Wayland, GNOME keeps the
    extension's previous code loaded until you start a new session.
-4. Press **Super+V** and check that the header shows **ClipNacre 0.1.16**. Your
+4. Press **Super+V** and check that the header shows **ClipNacre 0.2.0**. Your
    language and shortcut settings remain. Saved text history, pins, and emoji
    recents migrate; history configured to clear at logout is erased as requested.
 
@@ -210,8 +212,8 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-The package should report **0.1.16**; the extension's **Version** should also
-report **0.1.16** (the internal extension number is 17). If the package is new but
+The package should report **0.2.0**; the extension's **Version** should also
+report **0.2.0** (the internal extension number is 18). If the package is new but
 GNOME still reports an old version, log out/in before reinstalling.
 
 The extension's **Path** should be
@@ -518,7 +520,7 @@ sudo apt install build-essential debhelper libglib2.0-bin nodejs python3 gettext
     gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gdkpixbuf-2.0 lintian git gh
 make test
 make package
-lintian --fail-on error,warning ../super-v-ubuntu_0.1.16_all.deb
+lintian --fail-on error,warning ../super-v-ubuntu_0.2.0_all.deb
 ```
 
 No npm dependencies or runtime downloads are required. Debian's build invokes

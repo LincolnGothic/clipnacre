@@ -13,9 +13,9 @@ task_deb="../super-v-ubuntu_${task_version}_all.deb"
 lintian --fail-on error,warning "$task_deb"
 python3 scripts/audit-package.py "$task_deb"
 python3 scripts/package-target.py "$task_deb" "$task_target"
-lintian --fail-on error,warning "artifacts/super-v-ubuntu_${task_version}_${task_target}_all.deb"
+lintian --fail-on error,warning "artifacts/clipnacre_${task_version}_${task_target}_all.deb"
 if [ "$task_target" = ubuntu24.04 ] && [ "$task_arch" = amd64 ]; then
-    cp "$task_deb" artifacts/
+    cp "$task_deb" "artifacts/clipnacre_${task_version}_linux_all.deb"
 fi
 make translations
 glib-compile-schemas --strict extension/schemas

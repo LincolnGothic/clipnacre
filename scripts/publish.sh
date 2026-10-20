@@ -45,7 +45,7 @@ task_tag="v$task_version"
 gh release view "$task_tag" --repo "$task_repo" --json url,isDraft,assets,tagName
 task_temp=$(mktemp -d)
 trap 'rm -rf "$task_temp"' EXIT HUP INT TERM
-gh release download "$task_tag" --repo "$task_repo" --dir "$task_temp" --pattern '*.deb' --pattern SHA256SUMS
+gh release download "$task_tag" --repo "$task_repo" --dir "$task_temp" --pattern '*.deb' --pattern '*.zip' --pattern '*.dmg' --pattern SHA256SUMS
 (cd "$task_temp" && sha256sum --check SHA256SUMS)
 git status --short
 git log -1 --format='%H %s'
