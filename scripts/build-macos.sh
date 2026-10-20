@@ -40,5 +40,21 @@ ditto "$task_app" "$task_stage/dmg/ClipNacre.app"
 ln -s /Applications "$task_stage/dmg/Applications"
 hdiutil create -volname ClipNacre -srcfolder "$task_stage/dmg" -format UDZO "${task_prefix}.dmg"
 hdiutil verify "${task_prefix}.dmg"
-unzip -l "${task_prefix}.zip" | head -30 || true
+verify_packaged_app() {
+    codesign --verify --deep --strict --verbose=2 "$1"
+    test "$(lipo -archs "$1/Contents/MacOS/ClipNacre")" = "$task_arch"
+    test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$1/Contents/Info.plist")" = "$task_version"
+}
+unzip -t -q "${task_prefix}.zip"
+mkdir -p "$task_stage/zip-verify"
+ditto -x -k "${task_prefix}.zip" "$task_stage/zip-verify"
+verify_packaged_app "$task_stage/zip-verify/ClipNacre.app"
+task_mount="$task_stage/dmg-verify"
+mkdir -p "$task_mount"
+hdiutil attach -readonly -nobrowse -mountpoint "$task_mount" "${task_prefix}.dmg"
+trap 'hdiutil detach "$task_mount"' EXIT
+verify_packaged_app "$task_mount/ClipNacre.app"
+test "$(readlink "$task_mount/Applications")" = /Applications
+hdiutil detach "$task_mount"
+trap - EXIT
 printf '%s\n' "PASS: native tests, app smoke/export/OCR, signature, $task_arch architecture, ZIP and DMG"

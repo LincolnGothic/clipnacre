@@ -111,6 +111,9 @@ private final class CaptureScratch {
     }
 
     func readPNG() throws -> Data {
+        cleanupLock.lock()
+        defer { cleanupLock.unlock() }
+        guard !cleaned else { throw CocoaError(.userCancelled) }
         // Resolve relative to our still-open private directory, without following
         // a symlink. NONBLOCK also prevents a substituted FIFO from blocking open.
         let descriptor = Darwin.openat(directoryFD, Self.fileName, O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC)
@@ -147,9 +150,9 @@ private final class CaptureScratch {
 
     func cleanup() {
         cleanupLock.lock()
-        guard !cleaned else { cleanupLock.unlock(); return }
+        defer { cleanupLock.unlock() }
+        guard !cleaned else { return }
         cleaned = true
-        cleanupLock.unlock()
         // These are the two exact app-created scratch paths. No recursive removal.
         // unlinkat removes only capture.png itself, including a substituted symlink.
         Darwin.unlinkat(directoryFD, Self.fileName, 0)
@@ -204,12 +207,15 @@ final class CaptureService {
     private var completion: ((Result<Data, Error>) -> Void)?
     private var generation = 0
     private var timeout: DispatchWorkItem?
+    private var attempts: [UUID: (process: Process, scratch: CaptureScratch)] = [:]
+    private var shuttingDown = false
 
     func capture(completion: @escaping (Result<Data, Error>) -> Void) {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { self.capture(completion: completion) }
             return
         }
+        guard !shuttingDown else { completion(.failure(CocoaError(.userCancelled))); return }
         cancel()
         guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
             completion(.failure(NativeServiceError.permission))
@@ -218,11 +224,16 @@ final class CaptureService {
         let scratch: CaptureScratch
         do { scratch = try CaptureScratch() }
         catch { completion(.failure(error)); return }
-        generation += 1
-        let current = generation
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
         process.arguments = ["-i", "-x", "-t", "png", scratch.path]
+        launch(process, scratch: scratch, completion: completion)
+    }
+
+    private func launch(_ process: Process, scratch: CaptureScratch, completion: @escaping (Result<Data, Error>) -> Void) {
+        generation += 1
+        let current = generation, id = UUID()
+        attempts[id] = (process, scratch)
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
         self.process = process
@@ -230,9 +241,15 @@ final class CaptureService {
         process.terminationHandler = { [weak self] ended in
             DispatchQueue.main.async {
                 // Every ended attempt cleans up, even if cancelled or superseded.
-                guard let self = self, self.generation == current else { scratch.cleanup(); return }
+                guard let self = self else { scratch.cleanup(); return }
+                guard self.generation == current else {
+                    scratch.cleanup()
+                    self.attempts.removeValue(forKey: id)
+                    return
+                }
                 guard ended.terminationStatus == 0 else {
                     scratch.cleanup()
+                    self.attempts.removeValue(forKey: id)
                     self.finish(.failure(CocoaError(.userCancelled)))
                     return
                 }
@@ -242,6 +259,7 @@ final class CaptureService {
                     catch { result = .failure(error) }
                     scratch.cleanup()
                     DispatchQueue.main.async {
+                        self.attempts.removeValue(forKey: id)
                         guard self.generation == current else { return }
                         self.finish(result)
                     }
@@ -260,6 +278,7 @@ final class CaptureService {
             DispatchQueue.main.asyncAfter(deadline: .now() + 120, execute: deadline)
         } catch {
             scratch.cleanup()
+            attempts.removeValue(forKey: id)
             finish(.failure(error))
         }
     }
@@ -271,7 +290,63 @@ final class CaptureService {
         if completion != nil { finish(.failure(CocoaError(.userCancelled))) }
     }
 
-    static func selfTest() throws { try CaptureScratch.selfTest() }
+    /// Application termination must not depend on queued main-thread handlers.
+    /// Track cancelled attempts until cleanup, stop every writer, then wait for
+    /// any in-flight bounded read before removing its exact scratch paths.
+    func shutdown() {
+        guard Thread.isMainThread else { DispatchQueue.main.sync { self.shutdown() }; return }
+        shuttingDown = true
+        generation += 1
+        timeout?.cancel(); timeout = nil
+        completion = nil
+        let outstanding = Array(attempts.values)
+        for attempt in outstanding {
+            if attempt.process.isRunning {
+                attempt.process.terminate()
+                // Quit has no remaining interactive capture to preserve. SIGKILL
+                // also handles a writer that ignores SIGTERM without hanging Quit.
+                if attempt.process.isRunning { Darwin.kill(attempt.process.processIdentifier, SIGKILL) }
+            }
+            attempt.process.waitUntilExit()
+            attempt.scratch.cleanup()
+        }
+        attempts.removeAll()
+        process = nil
+    }
+
+    static func selfTest() throws {
+        if !Thread.isMainThread { try DispatchQueue.main.sync { try Self.selfTest() }; return }
+        try CaptureScratch.selfTest()
+        let service = CaptureService()
+        let first = try CaptureScratch()
+        defer { first.cleanup() }
+        let second = try CaptureScratch()
+        defer { service.shutdown(); second.cleanup() }
+        func writer(_ scratch: CaptureScratch) -> Process {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/bin/sh")
+            // Positional arguments keep the private path out of shell syntax.
+            // This child writes only its app-owned scratch file, without TCC.
+            process.arguments = ["-c", "printf test > \"$1\"; exec /bin/sleep 30", "clipnacre-capture-test", scratch.path]
+            return process
+        }
+        var delivered = 0
+        let firstWriter = writer(first)
+        service.launch(firstWriter, scratch: first) { _ in delivered += 1 }
+        guard firstWriter.isRunning else { throw NativeServiceError.selfTest }
+        service.cancel()
+        let secondWriter = writer(second)
+        service.launch(secondWriter, scratch: second) { _ in delivered += 1 }
+        guard secondWriter.isRunning, service.attempts.count == 2 else { throw NativeServiceError.selfTest }
+        service.shutdown()
+        guard !firstWriter.isRunning, !secondWriter.isRunning, service.attempts.isEmpty,
+              delivered == 1 else { throw NativeServiceError.selfTest }
+        for scratch in [first, second] {
+            guard !FileManager.default.fileExists(atPath: scratch.path),
+                  !FileManager.default.fileExists(atPath: URL(fileURLWithPath: scratch.path).deletingLastPathComponent().path)
+            else { throw NativeServiceError.selfTest }
+        }
+    }
 
     private func finish(_ result: Result<Data, Error>) {
         generation += 1

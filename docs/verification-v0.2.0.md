@@ -10,10 +10,10 @@ Linux remains a JavaScript GNOME extension with version 0.2.0/revision 18.
   history/persistence XCTest suite (limits, pins, Unicode identity/search,
   corruption and symlink refusal).
 - Native app smoke tests verify clipboard ownership change handling, same-text
-  clipboard replacement, private screenshot-file ownership/limits, actual image
+  clipboard replacement, private screenshot-file ownership/limits and synchronous quit cleanup, actual image
   export and crop/redaction boundaries, local Vision recognition and bundled data.
 - A native picker preview is generated for visual inspection. Package checks
-  verify the executable architecture, ad-hoc signature, ZIP contents and DMG.
+  verify the executable architecture, ad-hoc signature and version inside the extracted ZIP and mounted DMG.
 - All six existing Linux targets run native packaging, lint, schemas, generated
   data, JavaScript, gettext, GJS, headless Wayland and installation checks.
 - Publication requires all eight native target jobs. The release creates four

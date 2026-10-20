@@ -225,7 +225,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTa
         guard readRegularFile(file, limit: 2) == nil, readRegularFile(file, limit: 100) == corrupt else { throw NSError(domain: "ClipNacre.AppTest", code: 3) }
     }
 
-    func applicationWillTerminate(_ notification: Notification) { timer?.invalidate(); capture.cancel(); pins.closeAll(); saveHistory() }
+    func applicationWillTerminate(_ notification: Notification) { timer?.invalidate(); capture.shutdown(); pins.closeAll(); saveHistory() }
 
     func makeMenus() {
         let main = NSMenu()
