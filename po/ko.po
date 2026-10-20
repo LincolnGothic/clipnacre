@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 msgid ""
-msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/super-v-ubuntu/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: Super V Ubuntu contributors\nLanguage-Team: ko\nLanguage: ko\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
+msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/clipnacre/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: ClipNacre contributors\nLanguage-Team: ko\nLanguage: ko\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Activities"
 msgstr "활동"
@@ -56,8 +56,8 @@ msgstr "클립보드 기록 수집"
 msgid "Center of screen"
 msgstr "화면 중앙"
 
-msgid "Changes Super V immediately. Language names stay in their native form."
-msgstr "Super V의 언어가 즉시 변경됩니다. 언어 이름은 각 언어의 원래 표기로 표시됩니다."
+msgid "Changes ClipNacre immediately. Language names stay in their native form."
+msgstr "ClipNacre의 언어가 즉시 변경됩니다. 언어 이름은 각 언어의 원래 표기로 표시됩니다."
 
 msgid "Choose a folder, or use the last saved location."
 msgstr "폴더를 선택하거나 마지막 저장 위치를 사용하세요."
@@ -341,8 +341,8 @@ msgstr "불투명도"
 msgid "Opacity: %d percent"
 msgstr "불투명도: %d퍼센트"
 
-msgid "Open the editor after screenshots taken through Super V. Images in history can always be edited."
-msgstr "Super V로 촬영한 후 편집기를 엽니다. 기록의 이미지는 언제든 편집할 수 있습니다."
+msgid "Open the editor after screenshots taken through ClipNacre. Images in history can always be edited."
+msgstr "ClipNacre로 촬영한 후 편집기를 엽니다. 기록의 이미지는 언제든 편집할 수 있습니다."
 
 msgid "Paste automatically"
 msgstr "자동으로 붙여넣기"
@@ -488,8 +488,8 @@ msgstr "저장된 기록을 읽을 수 없어 삭제했습니다."
 msgid "Stroke width / text size"
 msgstr "선 굵기 / 글자 크기"
 
-msgid "Super V"
-msgstr "Super V"
+msgid "ClipNacre"
+msgstr "ClipNacre"
 
 msgid "Opens near the last click in the focused app, with the mouse pointer as a fallback."
 msgstr "활성 앱에서 마지막으로 클릭한 위치 근처에 열립니다. 기록이 없으면 마우스 포인터 위치를 사용합니다."

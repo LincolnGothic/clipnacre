@@ -1,14 +1,14 @@
 {
   "uuid": "super-v-ubuntu@super-v-ubuntu.local",
-  "name": "Super V Ubuntu",
+  "name": "ClipNacre",
   "description": "A Windows-style Super+V picker for Ubuntu GNOME, with text and image clipboard history, emoji, kaomoji, symbols, and local GIF favorites. Capture screenshots with Super+Shift+S, edit and annotate them, pin images on screen, and extract text with local OCR.",
   "shell-version": [
     "46",
     "48",
     "50"
   ],
-  "version": 16,
-  "version-name": "0.1.15",
+  "version": 17,
+  "version-name": "0.1.16",
   "settings-schema": "org.gnome.shell.extensions.super-v-ubuntu",
   "session-modes": [
     "user"

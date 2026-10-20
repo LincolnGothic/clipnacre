@@ -7,7 +7,7 @@ import System from 'system';
 
 Gtk.init();
 const loop = new GLib.MainLoop(null, false);
-const window = new Gtk.Window({title: 'Super V image receiver', default_width: 320, default_height: 240});
+const window = new Gtk.Window({title: 'ClipNacre image receiver', default_width: 320, default_height: 240});
 const input = new Gtk.TextView();
 input.buffer.text = 'Synthetic clipboard image paste test';
 window.set_child(input);

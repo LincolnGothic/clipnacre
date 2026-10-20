@@ -53,7 +53,7 @@ class SuperVPopup extends ModalDialog.ModalDialog {
         this.catalogs = {kaomoji: new CatalogIndex(kaomoji, _), symbols: new CatalogIndex(symbols, _)};
         const horizontal = horizontalBoxProperties(St.BoxLayout, Clutter);
         const header = this._header = new St.BoxLayout({...horizontal, style_class: 'super-v-header', x_expand: true, reactive: true});
-        this._title = new St.Label({text: `Super V ${controller.metadata?.['version-name'] ?? ''}`.trim(),
+        this._title = new St.Label({text: `ClipNacre ${controller.metadata?.['version-name'] ?? ''}`.trim(),
             style_class: 'super-v-title',
             x_expand: true, y_align: Clutter.ActorAlign.CENTER});
         header.add_child(this._title);

@@ -1,8 +1,8 @@
-# Super V Ubuntu — Français
+# ClipNacre — Français
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
-v0.1.15 corrige le raccourci de capture après l’ouverture de « Afficher les applications » dans Ubuntu. Super+Maj+S fonctionne aussi dans la vue des fenêtres et la recherche d’applications. L’image visible est conservée ; Échap annule la sélection.
+À partir de v0.1.16, Super V Ubuntu devient **ClipNacre**. Le nom du paquet Linux, l’identifiant de l’extension et le dossier de l’historique restent compatibles pour une mise à jour directe. La version macOS est prévue ; cette publication concerne uniquement Linux.
 
 v0.1.14 ajoute la reconnaissance visuelle du texte des captures. Appuyez sur **Super+Shift+S**, puis ouvrez **Copier le texte de l’image** (**Ctrl+Shift+O**) dans l’éditeur. Cliquez sur un mot reconnu ou faites glisser sur une zone, vérifiez et modifiez le résultat, puis copiez-le. **Sélectionner tout le texte** rétablit le résultat complet. L’OCR fonctionne localement ; l’anglais est inclus. Pour le français, installez `tesseract-ocr-fra` et choisissez cette langue dans la fenêtre de reconnaissance. L’anglais installé est associé à la langue choisie pour reconnaître les textes mixtes. Après la mise à jour, enregistrez votre travail, déconnectez-vous puis reconnectez-vous.
 
@@ -24,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## Première installation
 
-Téléchargez le [paquet v0.1.15](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.15/super-v-ubuntu_0.1.15_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
+Téléchargez le [paquet v0.1.16](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.15_all.deb
+sudo apt install ./super-v-ubuntu_0.1.16_all.deb
 ```
 
 Après l’installation, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**. Exécutez ces commandes avec votre compte habituel, sans sudo. La première réserve Super+M aux notifications et libère Super+V ; elle remplace tout raccourci de notification personnalisé.
@@ -38,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Appuyez sur **Super+V** ; le titre doit afficher **Super V 0.1.15**.
+Appuyez sur **Super+V** ; le titre doit afficher **ClipNacre 0.1.16**.
 
-## Mise à jour vers v0.1.15
+## Mise à jour vers v0.1.16
 
-Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **Super V 0.1.15** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
+Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **ClipNacre 0.1.16** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
 
 Vérifiez le paquet installé et l’extension chargée par GNOME avec votre compte habituel :
 
@@ -51,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Les deux versions doivent indiquer **0.1.15** (le numéro interne de l’extension est 16). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
+Les deux versions doivent indiquer **0.1.16** (le numéro interne de l’extension est 17). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
 
-## Guide des paramètres de v0.1.15
+## Guide des paramètres de v0.1.16
 
 Ouvrez Super+V et cliquez sur l’engrenage dans l’en-tête pour ouvrir les paramètres.
 
@@ -70,6 +70,6 @@ Activer l’effacement à l’arrêt supprime l’historique enregistré et cons
 
 Cliquez dans le champ de destination, puis appuyez sur **Super+V**. Les flèches sélectionnent, Entrée insère et Échap ferme. Ctrl+Tab change d’onglet ; Ctrl+F revient à la recherche. Les émojis sont présentés en grille et peuvent être recherchés par leur nom en français ou en anglais. Les paramètres permettent de modifier la position, le raccourci, l’historique et le collage automatique.
 
-Un seul paquet inclut l’anglais, le chinois simplifié, le chinois traditionnel, le japonais, l’espagnol, le français et le coréen. Choisissez dans « Paramètres → Apparence → Langue » de Super V : l’interface et la recherche traduite changent immédiatement, sans reconnexion ni modification de la langue d’Ubuntu. « Suivre le système » est le choix par défaut ; les langues non disponibles utilisent l’anglais. Les noms des langues restent dans leur forme native. Les catégories se sélectionnent directement dans une rangée horizontale ; utilisez les flèches ou le défilement horizontal pour en voir davantage. Le bouton de la main ouvre le menu des couleurs de peau.
+Un seul paquet inclut l’anglais, le chinois simplifié, le chinois traditionnel, le japonais, l’espagnol, le français et le coréen. Choisissez dans « Paramètres → Apparence → Langue » de ClipNacre : l’interface et la recherche traduite changent immédiatement, sans reconnexion ni modification de la langue d’Ubuntu. « Suivre le système » est le choix par défaut ; les langues non disponibles utilisent l’anglais. Les noms des langues restent dans leur forme native. Les catégories se sélectionnent directement dans une rangée horizontale ; utilisez les flèches ou le défilement horizontal pour en voir davantage. Le bouton de la main ouvre le menu des couleurs de peau.
 
 Ajoutez vos GIF locaux dans les paramètres. L’application de destination doit accepter les images ; la prise en charge des animations dépend de l’application. Aucune recherche de GIF en ligne. L’historique peut contenir du texte privé et est enregistré en clair. Consultez la [documentation complète en anglais](../../README.md) et les [notes de confidentialité](../../SECURITY.md), notamment l’état des tests.

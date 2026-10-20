@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 msgid ""
-msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/super-v-ubuntu/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: Super V Ubuntu contributors\nLanguage-Team: fr\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/clipnacre/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: ClipNacre contributors\nLanguage-Team: fr\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Activities"
 msgstr "Activités"
@@ -56,8 +56,8 @@ msgstr "Enregistrer l’historique du presse-papiers"
 msgid "Center of screen"
 msgstr "Centre de l’écran"
 
-msgid "Changes Super V immediately. Language names stay in their native form."
-msgstr "Change immédiatement la langue de Super V. Les noms des langues restent dans leur forme native."
+msgid "Changes ClipNacre immediately. Language names stay in their native form."
+msgstr "Change immédiatement la langue de ClipNacre. Les noms des langues restent dans leur forme native."
 
 msgid "Choose a folder, or use the last saved location."
 msgstr "Choisissez un dossier ou utilisez le dernier emplacement."
@@ -341,8 +341,8 @@ msgstr "Opacité"
 msgid "Opacity: %d percent"
 msgstr "Opacité : %d pour cent"
 
-msgid "Open the editor after screenshots taken through Super V. Images in history can always be edited."
-msgstr "Ouvre l’éditeur après une capture avec Super V. Les images de l’historique restent modifiables."
+msgid "Open the editor after screenshots taken through ClipNacre. Images in history can always be edited."
+msgstr "Ouvre l’éditeur après une capture avec ClipNacre. Les images de l’historique restent modifiables."
 
 msgid "Paste automatically"
 msgstr "Coller automatiquement"
@@ -488,8 +488,8 @@ msgstr "L’historique enregistré n’a pas pu être lu et a été supprimé."
 msgid "Stroke width / text size"
 msgstr "Épaisseur / taille du texte"
 
-msgid "Super V"
-msgstr "Super V"
+msgid "ClipNacre"
+msgstr "ClipNacre"
 
 msgid "Opens near the last click in the focused app, with the mouse pointer as a fallback."
 msgstr "S’ouvre près du dernier clic dans l’application active ; à défaut, utilise la position du pointeur."

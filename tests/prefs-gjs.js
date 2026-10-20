@@ -56,7 +56,7 @@ function verify(language) {
         return null;
     };
     settings.set_string('export-folder', 'file:///tmp'); findButton(resetRow).emit('clicked');
-    if (settings.get_string('export-folder') || settings.get_string('export-pattern') !== 'Super V {date} {time}')
+    if (settings.get_string('export-folder') || settings.get_string('export-pattern') !== 'ClipNacre {date} {time}')
         throw new Error('Export preferences did not reset');
     const ocr = rows.find(row => row.title === _('OCR language'));
     ocr.selected = 3;
