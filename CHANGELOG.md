@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-10-20
+
+- Add native Swift/AppKit macOS builds for Apple Silicon and Intel: clipboard history, character search, screenshots, image editing, floating pins and local Vision OCR.
+- Include seven interface languages, guarded automatic paste, private bounded history storage and explicit permission controls.
+- Use clipnacre in public DMG, ZIP and Linux installer filenames; retain Linux package/settings identities for compatible upgrades.
+- Gate publication on both native Mac builds and all six existing native Linux targets; publish shared SHA256SUMS.
+- Distribute ad-hoc signed, unnotarized Mac builds and document interactive permission/paste and older-macOS acceptance limits.
+
 ## 0.1.16 — 2026-10-20
 
 - Rename Super V Ubuntu to ClipNacre with a platform-neutral public identity and canonical repository URL.

@@ -2,7 +2,7 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
-À partir de v0.1.16, Super V Ubuntu devient **ClipNacre**. Le nom du paquet Linux, l’identifiant de l’extension et le dossier de l’historique restent compatibles pour une mise à jour directe. La version macOS est prévue ; cette publication concerne uniquement Linux.
+v0.2.0 ajoute **ClipNacre natif pour macOS**, en DMG/ZIP pour Apple Silicon et Intel, avec historique, édition de captures, images flottantes et OCR local. Les téléchargements portent le nom clipnacre ; les identifiants et données Linux restent compatibles. L’app Mac n’est pas notariée. Consultez le [guide Mac et ses autorisations](../macos.md).
 
 v0.1.14 ajoute la reconnaissance visuelle du texte des captures. Appuyez sur **Super+Shift+S**, puis ouvrez **Copier le texte de l’image** (**Ctrl+Shift+O**) dans l’éditeur. Cliquez sur un mot reconnu ou faites glisser sur une zone, vérifiez et modifiez le résultat, puis copiez-le. **Sélectionner tout le texte** rétablit le résultat complet. L’OCR fonctionne localement ; l’anglais est inclus. Pour le français, installez `tesseract-ocr-fra` et choisissez cette langue dans la fenêtre de reconnaissance. L’anglais installé est associé à la langue choisie pour reconnaître les textes mixtes. Après la mise à jour, enregistrez votre travail, déconnectez-vous puis reconnectez-vous.
 
@@ -24,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## Première installation
 
-Téléchargez le [paquet v0.1.16](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
+Téléchargez le [paquet v0.2.0](https://github.com/LincolnGothic/clipnacre/releases/download/v0.2.0/clipnacre_0.2.0_linux_all.deb) et ouvrez un terminal dans le dossier contenant le fichier :
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.16_all.deb
+sudo apt install ./clipnacre_0.2.0_linux_all.deb
 ```
 
 Après l’installation, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**. Exécutez ces commandes avec votre compte habituel, sans sudo. La première réserve Super+M aux notifications et libère Super+V ; elle remplace tout raccourci de notification personnalisé.
@@ -38,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Appuyez sur **Super+V** ; le titre doit afficher **ClipNacre 0.1.16**.
+Appuyez sur **Super+V** ; le titre doit afficher **ClipNacre 0.2.0**.
 
-## Mise à jour vers v0.1.16
+## Mise à jour vers v0.2.0
 
-Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **ClipNacre 0.1.16** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
+Téléchargez le paquet ci-dessus et exécutez la même commande apt dans son dossier. Il remplace l’ancienne version, sans désinstallation préalable. Ensuite, **enregistrez votre travail, déconnectez-vous puis reconnectez-vous**, et vérifiez **ClipNacre 0.2.0** dans le titre de **Super+V**. La langue et les raccourcis sont conservés ; l’historique de texte enregistré, les éléments épinglés et les emojis récents sont migrés. L’historique configuré pour être effacé à la déconnexion est supprimé selon ce réglage.
 
 Vérifiez le paquet installé et l’extension chargée par GNOME avec votre compte habituel :
 
@@ -51,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Les deux versions doivent indiquer **0.1.16** (le numéro interne de l’extension est 17). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
+Les deux versions doivent indiquer **0.2.0** (le numéro interne de l’extension est 18). Si seul le paquet est à jour, déconnectez-vous puis reconnectez-vous. Pour le paquet système, Path doit être `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si le chemin pointe vers votre dossier personnel, sauvegardez ce dossier UUID et déplacez-le hors du répertoire des extensions, puis reconnectez-vous. Si Super+V ne répond pas, utilisez la commande enable ci-dessus ; s’il ouvre les notifications, vérifiez la commande de raccourci de la première installation. Pour ouvrir directement les paramètres, exécutez `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
 
-## Guide des paramètres de v0.1.16
+## Guide des paramètres de v0.2.0
 
 Ouvrez Super+V et cliquez sur l’engrenage dans l’en-tête pour ouvrir les paramètres.
 

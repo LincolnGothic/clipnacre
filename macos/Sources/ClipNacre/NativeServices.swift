@@ -3,6 +3,7 @@ import CoreGraphics
 import CoreText
 import ImageIO
 import Vision
+import Darwin
 
 private enum NativeServiceError: LocalizedError {
     case permission, invalidImage, imageLimit, captureFailed, timeout, textLimit, unavailableLanguage, selfTest
@@ -67,6 +68,137 @@ private enum ServiceImage {
     }
 }
 
+/// Owns one screenshot attempt. Cleanup is called only after its process exits,
+/// or when launch fails, so a cancelled process cannot recreate removed output.
+private final class CaptureScratch {
+    static let maximumBytes = 8 * 1024 * 1024
+    private let directory: URL
+    private let directoryFD: Int32
+    private let cleanupLock = NSLock()
+    private var cleaned = false
+    private static let fileName = "capture.png"
+    var path: String { directory.appendingPathComponent(Self.fileName).path }
+
+    init() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("clipnacre-capture-" + UUID().uuidString, isDirectory: true)
+        guard Darwin.mkdir(directory.path, mode_t(0o700)) == 0 else { throw NativeServiceError.captureFailed }
+        guard Darwin.chmod(directory.path, mode_t(0o700)) == 0 else {
+            Darwin.rmdir(directory.path)
+            throw NativeServiceError.captureFailed
+        }
+        let directoryFD = Darwin.open(directory.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        guard directoryFD >= 0 else {
+            Darwin.rmdir(directory.path)
+            throw NativeServiceError.captureFailed
+        }
+        let fileFD = Darwin.openat(directoryFD, Self.fileName, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, mode_t(0o600))
+        guard fileFD >= 0 else {
+            Darwin.close(directoryFD)
+            Darwin.rmdir(directory.path)
+            throw NativeServiceError.captureFailed
+        }
+        let secured = Darwin.fchmod(fileFD, mode_t(0o600)) == 0
+        Darwin.close(fileFD)
+        guard secured else {
+            Darwin.unlinkat(directoryFD, Self.fileName, 0)
+            Darwin.close(directoryFD)
+            Darwin.rmdir(directory.path)
+            throw NativeServiceError.captureFailed
+        }
+        self.directory = directory
+        self.directoryFD = directoryFD
+    }
+
+    func readPNG() throws -> Data {
+        // Resolve relative to our still-open private directory, without following
+        // a symlink. NONBLOCK also prevents a substituted FIFO from blocking open.
+        let descriptor = Darwin.openat(directoryFD, Self.fileName, O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC)
+        guard descriptor >= 0 else { throw NativeServiceError.captureFailed }
+        defer { Darwin.close(descriptor) }
+        var info = stat()
+        guard Darwin.fstat(descriptor, &info) == 0,
+              info.st_mode & mode_t(S_IFMT) == mode_t(S_IFREG),
+              info.st_uid == Darwin.getuid(), info.st_nlink == 1 else { throw NativeServiceError.captureFailed }
+        guard info.st_size > 0 else { throw CocoaError(.userCancelled) }
+        guard info.st_size <= off_t(Self.maximumBytes) else { throw NativeServiceError.imageLimit }
+        var data = Data()
+        var buffer = [UInt8](repeating: 0, count: 64 * 1024)
+        while true {
+            // Read one byte beyond the remaining budget to detect concurrent growth.
+            let count = buffer.withUnsafeMutableBytes {
+                Darwin.read(descriptor, $0.baseAddress, min($0.count, Self.maximumBytes - data.count + 1))
+            }
+            if count < 0 {
+                if errno == EINTR { continue }
+                throw NativeServiceError.captureFailed
+            }
+            if count == 0 { break }
+            guard count <= Self.maximumBytes - data.count else { throw NativeServiceError.imageLimit }
+            data.append(contentsOf: buffer.prefix(count))
+        }
+        let source = try ServiceImage.source(data)
+        guard CGImageSourceGetStatus(source) == .statusComplete,
+              CGImageSourceGetStatusAtIndex(source, 0) == .statusComplete else { throw NativeServiceError.invalidImage }
+        if CGImageSourceGetType(source) as String? == "public.png" { return data }
+        guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { throw NativeServiceError.invalidImage }
+        return try ServiceImage.png(image)
+    }
+
+    func cleanup() {
+        cleanupLock.lock()
+        guard !cleaned else { cleanupLock.unlock(); return }
+        cleaned = true
+        cleanupLock.unlock()
+        // These are the two exact app-created scratch paths. No recursive removal.
+        // unlinkat removes only capture.png itself, including a substituted symlink.
+        Darwin.unlinkat(directoryFD, Self.fileName, 0)
+        var opened = stat(), named = stat()
+        if Darwin.fstat(directoryFD, &opened) == 0,
+           Darwin.lstat(directory.path, &named) == 0,
+           opened.st_dev == named.st_dev, opened.st_ino == named.st_ino,
+           named.st_mode & mode_t(S_IFMT) == mode_t(S_IFDIR) {
+            Darwin.rmdir(directory.path) // Succeeds only if our directory is empty.
+        }
+        Darwin.close(directoryFD)
+    }
+
+    /// Exercises file ownership and byte limits without invoking capture or TCC.
+    static func selfTest() throws {
+        let scratch = try CaptureScratch()
+        defer { scratch.cleanup() }
+        var directoryInfo = stat(), fileInfo = stat()
+        guard Darwin.fstat(scratch.directoryFD, &directoryInfo) == 0,
+              Darwin.fstatat(scratch.directoryFD, fileName, &fileInfo, AT_SYMLINK_NOFOLLOW) == 0,
+              directoryInfo.st_mode & mode_t(0o777) == mode_t(0o700),
+              fileInfo.st_mode & mode_t(0o777) == mode_t(0o600) else { throw NativeServiceError.selfTest }
+        do {
+            _ = try scratch.readPNG()
+            throw NativeServiceError.selfTest
+        } catch let error as CocoaError where error.code == .userCancelled { }
+        let file = Darwin.openat(scratch.directoryFD, fileName, O_WRONLY | O_NOFOLLOW | O_CLOEXEC)
+        guard file >= 0 else { throw NativeServiceError.selfTest }
+        defer { Darwin.close(file) }
+        guard let context = CGContext(data: nil, width: 2, height: 2, bitsPerComponent: 8, bytesPerRow: 8,
+                                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let image = context.makeImage() else { throw NativeServiceError.selfTest }
+        let png = try ServiceImage.png(image)
+        let written = png.withUnsafeBytes { Darwin.write(file, $0.baseAddress, $0.count) }
+        guard written == png.count, try scratch.readPNG() == png else { throw NativeServiceError.selfTest }
+        guard Darwin.ftruncate(file, off_t(maximumBytes + 1)) == 0 else { throw NativeServiceError.selfTest }
+        do {
+            _ = try scratch.readPNG()
+            throw NativeServiceError.selfTest
+        } catch NativeServiceError.imageLimit { }
+        guard Darwin.unlinkat(scratch.directoryFD, fileName, 0) == 0,
+              Darwin.symlinkat("/dev/null", scratch.directoryFD, fileName) == 0 else { throw NativeServiceError.selfTest }
+        do {
+            _ = try scratch.readPNG()
+            throw NativeServiceError.selfTest
+        } catch NativeServiceError.captureFailed { }
+    }
+}
+
 final class CaptureService {
     private var process: Process?
     private var completion: ((Result<Data, Error>) -> Void)?
@@ -83,50 +215,32 @@ final class CaptureService {
             completion(.failure(NativeServiceError.permission))
             return
         }
+        let scratch: CaptureScratch
+        do { scratch = try CaptureScratch() }
+        catch { completion(.failure(error)); return }
         generation += 1
         let current = generation
-        let pasteboard = NSPasteboard.general
-        let previousChange = pasteboard.changeCount
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
-        process.arguments = ["-i", "-c", "-x"]
+        process.arguments = ["-i", "-x", "-t", "png", scratch.path]
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
         self.process = process
         self.completion = completion
         process.terminationHandler = { [weak self] ended in
             DispatchQueue.main.async {
-                guard let self = self, self.generation == current else { return }
+                // Every ended attempt cleans up, even if cancelled or superseded.
+                guard let self = self, self.generation == current else { scratch.cleanup(); return }
                 guard ended.terminationStatus == 0 else {
+                    scratch.cleanup()
                     self.finish(.failure(CocoaError(.userCancelled)))
-                    return
-                }
-                guard pasteboard.changeCount != previousChange else {
-                    self.finish(.failure(CocoaError(.userCancelled)))
-                    return
-                }
-                // Read only explicit image representations; never deserialize pasteboard objects.
-                let capturedChange = pasteboard.changeCount
-                let png = pasteboard.data(forType: .png)
-                guard let data = png ?? pasteboard.data(forType: .tiff), pasteboard.changeCount == capturedChange else {
-                    self.finish(.failure(NativeServiceError.captureFailed))
                     return
                 }
                 DispatchQueue.global(qos: .userInitiated).async {
                     let result: Result<Data, Error>
-                    do {
-                        let source = try ServiceImage.source(data)
-                        if png != nil {
-                            guard data.count <= 8 * 1024 * 1024 else { throw NativeServiceError.imageLimit }
-                            result = .success(data)
-                        } else {
-                            // Metadata is checked before a full decode or TIFF-to-PNG conversion.
-                            guard let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
-                                throw NativeServiceError.invalidImage
-                            }
-                            result = .success(try ServiceImage.png(image))
-                        }
-                    } catch { result = .failure(error) }
+                    do { result = .success(try scratch.readPNG()) }
+                    catch { result = .failure(error) }
+                    scratch.cleanup()
                     DispatchQueue.main.async {
                         guard self.generation == current else { return }
                         self.finish(result)
@@ -139,11 +253,15 @@ final class CaptureService {
             let deadline = DispatchWorkItem { [weak self] in
                 guard let self = self, self.generation == current else { return }
                 if process.isRunning { process.terminate() }
-                self.finish(.failure(NativeServiceError.timeout))
+                // The termination handler owns cleanup; the process may still write.
+                self.finish(.failure(NativeServiceError.captureFailed))
             }
             timeout = deadline
             DispatchQueue.main.asyncAfter(deadline: .now() + 120, execute: deadline)
-        } catch { finish(.failure(error)) }
+        } catch {
+            scratch.cleanup()
+            finish(.failure(error))
+        }
     }
 
     func cancel() {
@@ -152,6 +270,8 @@ final class CaptureService {
         if let process = process, process.isRunning { process.terminate() }
         if completion != nil { finish(.failure(CocoaError(.userCancelled))) }
     }
+
+    static func selfTest() throws { try CaptureScratch.selfTest() }
 
     private func finish(_ result: Result<Data, Error>) {
         generation += 1

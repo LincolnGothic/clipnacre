@@ -22,6 +22,21 @@ extension ImageEditorController {
         let sample = NSBitmapImageRep(cgImage: rendered).colorAt(x: 10, y: 7)!.usingColorSpace(.deviceRGB)!
         try require(abs(sample.redComponent - sample.greenComponent) < 0.02 && sample.alphaComponent > 0.99,
                     "Redaction must replace original pixels with opaque gray")
+        var fractional = EditorState(crop: CGRect(x: 0, y: 0, width: 40, height: 30))
+        fractional.marks = [EditorMark(tool: .mosaic, points: [CGPoint(x: 5.25, y: 6.75), CGPoint(x: 24.25, y: 23.25)])]
+        let redacted = NSBitmapImageRep(cgImage: EditorRenderer.render(original, state: fractional)!)
+        // The symmetric vertical interval covers the same bitmap rows in either orientation.
+        for y in 6..<24 {
+            for x in 5..<25 {
+                let pixel = redacted.colorAt(x: x, y: y)!.usingColorSpace(.deviceRGB)!
+                try require(abs(pixel.redComponent - pixel.greenComponent) < 0.02 &&
+                            abs(pixel.greenComponent - pixel.blueComponent) < 0.02 && pixel.alphaComponent > 0.99,
+                            "Fractional redaction must fully replace every boundary pixel")
+            }
+        }
+        let outside = redacted.colorAt(x: 4, y: 6)!.usingColorSpace(.deviceRGB)!
+        try require(outside.redComponent > 0.95 && outside.greenComponent < 0.05,
+                    "Redaction must preserve pixels outside its integral coverage")
         let png = EditorRenderer.png(rendered)!
         try require(CGImageSourceCreateWithData(png as CFData, nil) != nil, "PNG round trip")
         var arrowState = EditorState(crop: CGRect(x: 0, y: 0, width: 40, height: 30))
@@ -133,11 +148,14 @@ private enum EditorRenderer {
                 context.addLines(between: mark.points); context.strokePath()
             case .mosaic:
                 // Opaque replacement, not a reversible blur of sensitive pixels.
-                context.clip(to: rect)
-                context.setFillColor(NSColor(white: 0.88, alpha: 1).cgColor); context.fill(rect)
+                let redaction = rect.integral
+                context.setShouldAntialias(false)
+                context.setBlendMode(.copy)
+                context.clip(to: redaction)
+                context.setFillColor(NSColor(white: 0.88, alpha: 1).cgColor); context.fill(redaction)
                 context.setFillColor(NSColor(white: 0.97, alpha: 1).cgColor)
-                for x in stride(from: rect.minX, to: rect.maxX, by: CGFloat(10)) {
-                    for y in stride(from: rect.minY, to: rect.maxY, by: CGFloat(10)) where (Int((x - rect.minX) / 10) + Int((y - rect.minY) / 10)) % 2 == 0 {
+                for x in stride(from: redaction.minX, to: redaction.maxX, by: CGFloat(10)) {
+                    for y in stride(from: redaction.minY, to: redaction.maxY, by: CGFloat(10)) where (Int((x - redaction.minX) / 10) + Int((y - redaction.minY) / 10)) % 2 == 0 {
                         context.fill(CGRect(x: x, y: y, width: 10, height: 10))
                     }
                 }
@@ -175,6 +193,7 @@ final class ImageEditorController: NSWindowController, NSWindowDelegate {
     private let toolPopup = NSPopUpButton()
     private let zoomLabel = NSTextField(labelWithString: "100%")
     private var ocrGeneration = 0
+    private var closed = false
 
     init?(data: Data, onCopy: @escaping (Data) -> Void, onPin: @escaping (Data) -> Void) {
         guard let image = EditorRenderer.validatedImage(data) else { return nil }
@@ -293,6 +312,7 @@ final class ImageEditorController: NSWindowController, NSWindowDelegate {
         canvas.setZoom(min(size.width / canvas.state.crop.width, size.height / canvas.state.crop.height))
     }
     private func output() -> Data? {
+        guard !closed else { return nil }
         guard let image = EditorRenderer.render(canvas.image, state: canvas.state), let data = EditorRenderer.png(image) else {
             showError(L("The image could not be exported.")); return nil
         }
@@ -300,6 +320,7 @@ final class ImageEditorController: NSWindowController, NSWindowDelegate {
         return data
     }
     @objc private func copyImage() {
+        guard !closed else { return }
         if NSApp.currentEvent?.type == .keyDown, window?.firstResponder === resultView { resultView.copy(nil); return }
         guard let data = output() else { return }
         onCopy(data); status.stringValue = L("Image copied")
@@ -308,13 +329,14 @@ final class ImageEditorController: NSWindowController, NSWindowDelegate {
     @objc private func saveImage() {
         guard let window = window, let data = output() else { return }
         let panel = NSSavePanel(); panel.allowedContentTypes = [.png]; panel.nameFieldStringValue = "ClipNacre.png"
-        panel.beginSheetModal(for: window) { [weak self] response in
-            guard response == .OK, let url = panel.url else { return }
-            do { try data.write(to: url, options: .atomic); self?.status.stringValue = L("Image saved") }
-            catch { self?.showError(L("The image could not be saved.")) }
+        panel.beginSheetModal(for: window) { [weak self, weak panel] response in
+            guard let self = self, !self.closed, response == .OK, let url = panel?.url else { return }
+            do { try data.write(to: url, options: .atomic); self.status.stringValue = L("Image saved") }
+            catch { self.showError(L("The image could not be saved.")) }
         }
     }
     @objc private func copyText() {
+        guard !closed else { return }
         NSPasteboard.general.clearContents(); NSPasteboard.general.setString(resultView.string, forType: .string)
         status.stringValue = L("Text copied")
     }
@@ -346,10 +368,22 @@ final class ImageEditorController: NSWindowController, NSWindowDelegate {
         }
     }
     private func showError(_ message: String) {
+        guard !closed else { return }
         let alert = NSAlert(); alert.messageText = message
         if let window = window { alert.beginSheetModal(for: window) }
     }
-    func windowWillClose(_ notification: Notification) { ocrGeneration += 1; ocr.cancel() }
+    private func cleanUp() {
+        guard !closed else { return }
+        closed = true
+        ocrGeneration += 1; ocr.cancel()
+        canvas.cancelPendingEditing()
+        if let window = window, let sheet = window.attachedSheet {
+            window.endSheet(sheet, returnCode: .cancel)
+            sheet.orderOut(nil)
+        }
+    }
+    override func close() { cleanUp(); super.close() }
+    func windowWillClose(_ notification: Notification) { cleanUp() }
 }
 
 private final class EditorCanvas: NSView {
@@ -374,6 +408,9 @@ private final class EditorCanvas: NSView {
     private var dragRect: CGRect?
     private var panOrigin = CGPoint.zero
     private var panStart = CGPoint.zero
+    private var textAlert: NSAlert?
+    private var editGeneration = 0
+    private var closed = false
 
     init(image: CGImage) {
         let rect = CGRect(x: 0, y: 0, width: CGFloat(image.width), height: CGFloat(image.height))
@@ -397,20 +434,24 @@ private final class EditorCanvas: NSView {
         CGRect(x: min(a.x, b.x), y: min(a.y, b.y), width: abs(a.x - b.x), height: abs(a.y - b.y))
     }
     private func commit(_ previous: EditorState) {
+        guard !closed else { return }
+        editGeneration += 1
         past.append(previous); if past.count > 50 { past.removeFirst() }
         future.removeAll(); words.removeAll(); selectedWords.removeAll()
         onChange?(); setZoom(zoom)
     }
     func undoEdit() {
-        guard let old = past.popLast() else { return }
+        guard !closed, let old = past.popLast() else { return }
+        editGeneration += 1
         future.append(state); state = old; selected = nil; words.removeAll(); onChange?(); setZoom(zoom)
     }
     func redoEdit() {
-        guard let next = future.popLast() else { return }
+        guard !closed, let next = future.popLast() else { return }
+        editGeneration += 1
         past.append(state); state = next; selected = nil; words.removeAll(); onChange?(); setZoom(zoom)
     }
     func deleteSelection() {
-        guard let index = selected, state.marks.indices.contains(index) else { return }
+        guard !closed, let index = selected, state.marks.indices.contains(index) else { return }
         let previous = state; state.marks.remove(at: index); selected = nil; commit(previous)
     }
     override func draw(_ dirtyRect: NSRect) {
@@ -437,6 +478,7 @@ private final class EditorCanvas: NSView {
         context.restoreGState()
     }
     override func mouseDown(with event: NSEvent) {
+        guard !closed else { return }
         window?.makeFirstResponder(self)
         start = point(event); beforeDrag = state; draft = nil; dragRect = nil; resizing = false
         if tool == .pan {
@@ -462,6 +504,7 @@ private final class EditorCanvas: NSView {
         }
     }
     override func mouseDragged(with event: NSEvent) {
+        guard !closed else { return }
         let current = point(event)
         if tool == .pan, let scroll = enclosingScrollView {
             let p = event.locationInWindow
@@ -489,7 +532,7 @@ private final class EditorCanvas: NSView {
     }
     override func mouseUp(with event: NSEvent) {
         defer { draft = nil; beforeDrag = nil; dragRect = nil; needsDisplay = true }
-        guard let previous = beforeDrag else { return }
+        guard !closed, let previous = beforeDrag else { return }
         if tool == .ocr {
             let rect = dragRect
             if !event.modifierFlags.contains(.command) { selectedWords.removeAll() }
@@ -508,21 +551,48 @@ private final class EditorCanvas: NSView {
             if let index = selected, previous.marks.indices.contains(index), state.marks[index].points != previous.marks[index].points { commit(previous) }
             return
         }
-        guard var mark = draft else { return }
+        guard let mark = draft else { return }
         if tool == .text {
-            let alert = NSAlert(); alert.messageText = L("Annotation text")
-            let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 26))
-            input.setAccessibilityLabel(L("Annotation text")); alert.accessoryView = input
-            alert.addButton(withTitle: L("Add")); alert.addButton(withTitle: L("Cancel"))
-            alert.window.initialFirstResponder = input
-            guard alert.runModal() == .alertFirstButtonReturn, !input.stringValue.isEmpty else { return }
-            mark.text = String(input.stringValue.prefix(1000))
-            if mark.bounds.width < 20 || mark.bounds.height < 20 {
-                mark.points = [start, CGPoint(x: start.x + min(CGFloat(mark.text.count) * 16, 600), y: start.y + 36)]
-            }
+            requestText(mark, previous: previous, at: start)
+            return
         }
         if mark.bounds.width > 1 || mark.bounds.height > 1 {
             state.marks.append(mark); selected = state.marks.count - 1; commit(previous)
+        }
+    }
+    private func requestText(_ mark: EditorMark, previous: EditorState, at origin: CGPoint) {
+        guard !closed, textAlert == nil, let window = window, window.attachedSheet == nil else { return }
+        let generation = editGeneration
+        let alert = NSAlert(); alert.messageText = L("Annotation text")
+        let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 26))
+        input.setAccessibilityLabel(L("Annotation text")); alert.accessoryView = input
+        alert.addButton(withTitle: L("Add")); alert.addButton(withTitle: L("Cancel"))
+        alert.window.initialFirstResponder = input
+        textAlert = alert
+        alert.beginSheetModal(for: window) { [weak self, weak alert] response in
+            guard let self = self, let alert = alert, self.textAlert === alert else { return }
+            self.textAlert = nil
+            guard !self.closed, self.editGeneration == generation,
+                  response == .alertFirstButtonReturn, !input.stringValue.isEmpty else { return }
+            var completed = mark
+            completed.text = String(input.stringValue.prefix(1000))
+            if completed.bounds.width < 20 || completed.bounds.height < 20 {
+                completed.points = [origin, CGPoint(x: origin.x + min(CGFloat(completed.text.count) * 16, 600), y: origin.y + 36)]
+            }
+            self.state.marks.append(completed)
+            self.selected = self.state.marks.count - 1
+            self.commit(previous)
+        }
+    }
+    func cancelPendingEditing() {
+        closed = true; editGeneration += 1
+        if let previous = beforeDrag { state = previous }
+        beforeDrag = nil; draft = nil; dragRect = nil
+        if let alert = textAlert {
+            textAlert = nil
+            (alert.accessoryView as? NSTextField)?.stringValue = ""
+            if let parent = alert.window.sheetParent { parent.endSheet(alert.window, returnCode: .cancel) }
+            alert.window.orderOut(nil)
         }
     }
     override func keyDown(with event: NSEvent) {

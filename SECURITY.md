@@ -1,5 +1,7 @@
 # Security and privacy
 
+The first sections describe the Linux GNOME extension. Native Mac behavior is described under [macOS](#macos) below.
+
 This extension operates inside GNOME Shell and can read clipboard text and images and
 send input to your applications. Enable it only if you trust the source.
 There are no runtime network calls, telemetry, cloud storage or analytics.
@@ -120,3 +122,35 @@ non-regular files and symlinks at the metadata check, have a three-second timeou
 and cap bytes during transfer. Remote links and file collections are ignored.
 All imports obey history pause, app exclusions, password hints and generation
 cancellation. Reading a copied file does not delete or modify its original.
+
+## macOS
+
+The native Mac app stores bounded plaintext history in
+`~/Library/Application Support/ClipNacre/history.json`, using a 0700 directory,
+0600 files, descriptor-based nonsymlink reads and private atomic replacement.
+It refuses unsafe or corrupt state and suspends disk saves after a failed load
+until the user explicitly erases it. OS backups, the same user and administrators
+may still access plaintext; these controls are not encryption or secure erasure.
+
+Clipboard monitoring rejects common confidential/transient hints and supports
+focused-app exclusions. These are best effort, not automatic password-field
+recognition. Capture pauses while locked/asleep; wake alone does not establish
+unlock. Automatic paste also requires the selected clipboard ownership generation,
+original focused app/window, no held physical modifiers and Accessibility access.
+Changed clipboard data or focus prevents injection. Emoji clipboard restoration
+requires the exact unchanged temporary write, including for a new copy of the
+same character.
+
+Native screenshot selection writes a PNG into a unique private 0700 temporary
+folder with a precreated 0600 file. The app imports bounded validated bytes from
+that exact file rather than trusting shared clipboard contents. After import,
+cancellation or failure, the app removes its exact scratch file and empty
+private directory after the process exits. Cancellation/generation guards prevent
+late history/editor updates. Image editor and Vision OCR state otherwise remain
+in memory. Closing an editor cancels recognition and its attached text/save sheets.
+Mosaic exports integral opaque replacement pixels; original history images remain.
+
+The app makes no runtime network calls or clipboard-content logs. Mac downloads
+are ad-hoc signed and unnotarized. Permission dialogs, arbitrary-app paste and
+physical lock/sleep/multiple-monitor acceptance remain manual checks. See
+[the Mac guide](docs/macos.md) and [release verification](docs/verification-v0.2.0.md).

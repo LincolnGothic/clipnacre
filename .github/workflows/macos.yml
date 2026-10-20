@@ -1,8 +1,6 @@
 name: macOS
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,7 +20,7 @@ jobs:
         run: bash scripts/build-macos.sh '${{ matrix.arch }}'
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-${{ matrix.arch }}
+          name: macos-installers-${{ matrix.arch }}
           path: |
             artifacts/clipnacre_*_macos_${{ matrix.arch }}.zip
             artifacts/clipnacre_*_macos_${{ matrix.arch }}.dmg

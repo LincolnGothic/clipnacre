@@ -1,6 +1,6 @@
 # Architecture
 
-ClipNacre runs as a GNOME Shell 46/48/50 ES-module extension. It adds two
+The Linux edition of ClipNacre runs as a GNOME Shell 46/48/50 ES-module extension. It adds two
 user-mode keybindings and a reusable, compact St/Clutter shell dialog. There is
 a temporary GTK editor window, without a daemon, Electron runtime, X11 automation, or runtime
 network access. The Debian package installs it at
@@ -138,3 +138,14 @@ format. URI-list/GNOME file offers can import one explicit local image file via
 asynchronous, cancellable reads, regular-file checks, a timeout and a byte cap.
 Remote URIs, multiple files and non-image extensions are rejected. Password MIME
 hints, pause/exclusions, generation checks and lock cleanup apply to all paths.
+
+## Native macOS application
+
+`macos/` is a SwiftPM application targeting macOS 13+. AppKit owns the menu-bar
+picker, global shortcuts, permissions, clipboard polling and guarded paste.
+`ClipNacreCore` validates bounded history and descriptor-based private persistence.
+The image editor exports flattened pixels, and Vision performs local word/line OCR.
+Native screenshot selection writes a private temporary PNG and imports validated
+bytes independently of the system clipboard; only then does the app copy it.
+The build packages the existing Unicode and gettext data as static resources.
+See [the Mac guide](macos.md) for installation, controls and acceptance limits.

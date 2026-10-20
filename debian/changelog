@@ -1,3 +1,11 @@
+super-v-ubuntu (0.2.0) unstable; urgency=medium
+
+  * Add the native macOS application and two native build/test targets.
+  * Brand public Linux installer filenames as clipnacre, retaining package IDs.
+  * Publish verified Mac DMG/ZIP and Linux installers with shared checksums.
+
+ -- ClipNacre contributors <super-v-ubuntu@users.noreply.github.com>  Tue, 20 Oct 2026 03:00:00 -0700
+
 super-v-ubuntu (0.1.16) unstable; urgency=medium
 
   * Rename the public project and visible application to ClipNacre.

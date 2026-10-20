@@ -86,8 +86,10 @@ jobs:
           name: log-debian13-${{ matrix.arch }}
           path: shell-*.log
           if-no-files-found: ignore
+  macos:
+    uses: ./.github/workflows/macos.yml
   publish-release:
-    needs: [ubuntu, debian]
+    needs: [ubuntu, debian, macos]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -103,6 +105,11 @@ jobs:
           pattern: deb-*-amd64
           path: artifacts
           merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: macos-installers-*
+          path: artifacts
+          merge-multiple: true
       - name: Publish verified installers and checksums
         env:
           GH_TOKEN: ${{ github.token }}
@@ -116,10 +123,12 @@ jobs:
             exit 0
           fi
           test "$(find artifacts -name '*.deb' | wc -l)" -eq 4
-          (cd artifacts && sha256sum *.deb > SHA256SUMS)
-          gh release create "$task_tag" artifacts/*.deb artifacts/SHA256SUMS \
+          test "$(find artifacts -name '*.zip' | wc -l)" -eq 2
+          test "$(find artifacts -name '*.dmg' | wc -l)" -eq 2
+          (cd artifacts && sha256sum *.deb *.zip *.dmg > SHA256SUMS)
+          gh release create "$task_tag" artifacts/*.deb artifacts/*.zip artifacts/*.dmg artifacts/SHA256SUMS \
             --target "$GITHUB_SHA" --title "ClipNacre $task_version" \
             --notes-file docs/release-notes.md
           mkdir release-verify
-          gh release download "$task_tag" --dir release-verify --pattern '*.deb' --pattern SHA256SUMS
+          gh release download "$task_tag" --dir release-verify --pattern '*.deb' --pattern '*.zip' --pattern '*.dmg' --pattern SHA256SUMS
           (cd release-verify && sha256sum --check SHA256SUMS)
