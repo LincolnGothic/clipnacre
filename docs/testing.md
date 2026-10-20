@@ -5,16 +5,16 @@ emoji generation, ESLint, Node logic/adapter tests, and GJS/Gio filesystem
 integration. Mock adapter tests exercise the actual asynchronous controller
 and clipboard modules, but do not prove Mutter clipboard, shell rendering or
 input delivery works on a real desktop. CI builds the `.deb` and checks it
-without an interactive shell. See `verification-v0.1.15.md` for current executed results.
+without an interactive shell. See `verification-v0.1.16.md` for current executed results.
 
 ## Package checks
 
 ```sh
 make package
-lintian --fail-on error,warning ../super-v-ubuntu_0.1.15_all.deb
-dpkg-deb --info ../super-v-ubuntu_0.1.15_all.deb
-dpkg-deb --contents ../super-v-ubuntu_0.1.15_all.deb
-python3 scripts/audit-package.py ../super-v-ubuntu_0.1.15_all.deb
+lintian --fail-on error,warning ../super-v-ubuntu_0.1.16_all.deb
+dpkg-deb --info ../super-v-ubuntu_0.1.16_all.deb
+dpkg-deb --contents ../super-v-ubuntu_0.1.16_all.deb
+python3 scripts/audit-package.py ../super-v-ubuntu_0.1.16_all.deb
 ```
 
 The archive must contain runtime files and compiled schemas only beneath
@@ -33,7 +33,7 @@ a backup if it contains local changes.
 ```sh
 gnome-shell --version
 printf '%s\n' "$XDG_SESSION_TYPE"
-sudo apt install ./super-v-ubuntu_0.1.15_all.deb
+sudo apt install ./super-v-ubuntu_0.1.16_all.deb
 ```
 
 Log out/in, then enable and inspect it as your desktop user:
@@ -101,7 +101,7 @@ Record any custom notification bindings first; the command replaces them.
     entries or cause shell exceptions. Test light/dark themes, 100%/200% scale,
     multiple monitors, long previews, scrolling beyond 60 results and keyboard
     navigation through incrementally rendered results.
-11. Confirm the header reads Super V 0.1.15. With Near last click selected,
+11. Confirm the header reads ClipNacre 0.1.16. With Near last click selected,
     click an input, move the pointer away, and open beside the remembered point.
     Drag the title bar to each edge, then check Settings and Screenshot clicks.
     Check work-area bounds,
@@ -129,14 +129,14 @@ Record any custom notification bindings first; the command replaces them.
     confirm only a crosshair is present before each drag. Use Print Screen for
     GNOME’s separate window/screen controls; the picker must not cover the capture. Escape should cancel without
     a new entry. Change and disable the screenshot shortcut in Settings. With
-    history paused, Super V still copies the screenshot but no history is added.
+    history paused, ClipNacre still copies the screenshot but no history is added.
 16. Enable Clear history on shutdown with text, images, pins and emoji recents
     present. Confirm JSON and managed image files disappear and current items
     remain in memory. Copy more items and verify no files return. Restart or
     log out/in: history, pins and recents must be empty. Turning the option off
     must respect Remember after logout. GNOME’s own screenshot files stay.
 
-17. Capture through Super V and verify the editor opens automatically. Turn off
+17. Capture through ClipNacre and verify the editor opens automatically. Turn off
     Edit after taking a screenshot and repeat. Open a history image with its
     pencil button and Ctrl+E. Exercise all tools, multilingual inline text and caret input, click-to-reposition before Enter, light mosaic dabs/freehand paths, tile and brush thickness,
     black-and-white filter and undo, repeated/nested crops, undo/redo, zoom/pan and PNG export.
@@ -150,7 +150,7 @@ Check permissions and shell logs after the matrix:
 ```sh
 stat -c '%a %n' "${XDG_STATE_HOME:-$HOME/.local/state}/super-v-ubuntu" \
     "${XDG_STATE_HOME:-$HOME/.local/state}/super-v-ubuntu/history.json"
-journalctl --user -b -o cat | rg 'super-v-ubuntu|Super V|JS ERROR'
+journalctl --user -b -o cat | rg 'super-v-ubuntu|ClipNacre|JS ERROR'
 ```
 
 Expect 700 and 600 when persistence is enabled. Redact clipboard content from

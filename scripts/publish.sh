@@ -10,7 +10,7 @@ test "$(git branch --show-current)" = main || { printf '%s\n' 'Switch to main fi
 test -z "$(git status --porcelain)" || { printf '%s\n' 'Commit source changes before publishing.' >&2; exit 1; }
 make test
 task_owner=$(gh api user --jq .login)
-task_repo="$task_owner/super-v-ubuntu"
+task_repo="$task_owner/clipnacre"
 task_expected="https://github.com/$task_repo.git"
 if gh repo view "$task_repo" --json nameWithOwner >/dev/null 2>&1; then
     test "$(gh repo view "$task_repo" --json visibility --jq .visibility)" = PUBLIC || {

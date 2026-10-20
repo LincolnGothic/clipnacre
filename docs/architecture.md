@@ -1,6 +1,6 @@
 # Architecture
 
-Super V Ubuntu runs as a GNOME Shell 46/48/50 ES-module extension. It adds two
+ClipNacre runs as a GNOME Shell 46/48/50 ES-module extension. It adds two
 user-mode keybindings and a reusable, compact St/Clutter shell dialog. There is
 a temporary GTK editor window, without a daemon, Electron runtime, X11 automation, or runtime
 network access. The Debian package installs it at
@@ -45,7 +45,7 @@ on cancellation; epoch/serial guards discard stale clipboard transfers.
 and exports a flattened, bounded PNG. Black covers use opaque pixels. The
 original is kept separate; the editor never rewrites history originals.
 Copy goes through Shell's clipboard owner, so it remains available after the
-editor closes. The automatic editor preference applies to Super V captures.
+editor closes. The automatic editor preference applies to ClipNacre captures.
 
 `paste.js` creates a Mutter/Clutter virtual keyboard, returns focus, waits for
 physical shortcut modifiers to be released, rechecks the exact destination,
@@ -122,7 +122,7 @@ size. The renderer uses a small repeating opaque gray/white Cairo pattern.
 Grayscale is document state with undo/redo; a weak cache holds the converted source
 pixbuf, while annotation colors remain independent.
 
-Super V synchronously requests a stage snapshot as capture starts, before taking
+ClipNacre synchronously requests a stage snapshot as capture starts, before taking
 an input grab. A new exported GNOME SelectArea displays that content and starts
 with a hidden rectangle. After selection, composite_to_stream crops the retained
 texture using scaled physical coordinates, preserving native resolution. The
