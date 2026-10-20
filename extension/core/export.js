@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-export const DEFAULT_EXPORT_PATTERN = 'Super V {date} {time}';
+export const DEFAULT_EXPORT_PATTERN = 'ClipNacre {date} {time}';
 export const OCR_LANGUAGES = [
     {id: 'eng', label: 'English'}, {id: 'chi_sim', label: '简体中文'},
     {id: 'chi_tra', label: '繁體中文'}, {id: 'jpn', label: '日本語'},

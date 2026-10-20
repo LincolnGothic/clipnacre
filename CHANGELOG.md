@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.16 — 2026-10-20
+
+- Rename Super V Ubuntu to ClipNacre with a platform-neutral public identity and canonical repository URL.
+- Update the picker, preferences, notifications, interface catalogs, current documentation and default screenshot filename prefix.
+- Preserve the Linux package name, extension UUID, settings schema, gettext domain, saved preferences and history paths for direct upgrades.
+- Align publishing and acceptance instructions with the new repository and release version.
+- Document that a native macOS version is planned; this release contains the Ubuntu/Debian GNOME application.
+
 ## 0.1.15 — 2026-10-19
 
 - Fix Super+Shift+S being ignored after opening Ubuntu Show Applications, the window overview or overview search.

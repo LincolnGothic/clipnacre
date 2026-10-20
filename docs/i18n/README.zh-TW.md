@@ -1,8 +1,8 @@
-# Super V Ubuntu — 繁體中文
+# ClipNacre — 繁體中文
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
-v0.1.15 修正點擊 Ubuntu「顯示應用程式」後截圖快捷鍵無反應的問題。Super+Shift+S 現在也支援視窗概覽及應用程式搜尋，截圖保留目前畫面，Escape 取消選取。
+自 v0.1.16 起，Super V Ubuntu 更名為 **ClipNacre**。Linux 安裝套件、擴充功能識別碼與歷史資料路徑保持相容，可直接升級。macOS 版本仍在規劃中，本次發佈僅提供 Linux 安裝套件。
 
 v0.1.14 新增視覺化截圖文字辨識。按 **Super+Shift+S** 截圖，在編輯器中點擊 **從影像複製文字**（或按 **Ctrl+Shift+O**），即可在影像上查看辨識出的文字框。點擊單一詞語或拖曳選取一片區域，檢查並編輯結果後複製；**選取全部文字** 可恢復完整辨識結果。OCR 在本機執行，英文語言套件隨安裝包提供；中文需安裝 `tesseract-ocr-chi-tra` 或 `tesseract-ocr-chi-sim`，並在辨識對話框中選擇對應語言。已安裝的英文套件會與所選語言一起辨識混合文字。升級後請儲存工作、登出並重新登入。
 
@@ -24,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 初次安裝
 
-下載 [v0.1.15 安裝套件](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.15/super-v-ubuntu_0.1.15_all.deb)，在套件所在資料夾中開啟終端機：
+下載 [v0.1.16 安裝套件](https://github.com/LincolnGothic/clipnacre/releases/download/v0.1.16/super-v-ubuntu_0.1.16_all.deb)，在套件所在資料夾中開啟終端機：
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.15_all.deb
+sudo apt install ./super-v-ubuntu_0.1.16_all.deb
 ```
 
 安裝後**儲存工作、登出並重新登入**，再以一般使用者執行以下命令（不使用 sudo）。第一個命令將通知快捷鍵設為 Super+M，讓本應用程式使用 Super+V；它會取代自訂通知快捷鍵。
@@ -38,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-按 **Super+V**，標題應為 **Super V 0.1.15**。
+按 **Super+V**，標題應為 **ClipNacre 0.1.16**。
 
-## 升級到 v0.1.15
+## 升級到 v0.1.16
 
-下載上方的套件，在套件所在資料夾中執行同一個 apt 命令，即可覆蓋升級，無須先解除安裝。接著**儲存工作、登出並重新登入**，再按 **Super+V** 確認標題為 **Super V 0.1.15**。語言與快捷鍵設定會保留，已儲存的文字歷史、釘選項目和最近使用的表情會遷移；設定為登出時清空的歷史會依設定清空。
+下載上方的套件，在套件所在資料夾中執行同一個 apt 命令，即可覆蓋升級，無須先解除安裝。接著**儲存工作、登出並重新登入**，再按 **Super+V** 確認標題為 **ClipNacre 0.1.16**。語言與快捷鍵設定會保留，已儲存的文字歷史、釘選項目和最近使用的表情會遷移；設定為登出時清空的歷史會依設定清空。
 
 以一般使用者檢查套件及 GNOME 目前載入的版本：
 
@@ -51,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-兩個版本都應為 **0.1.15**（擴充功能內部編號為 16）。若套件為新版而 GNOME 仍載入舊版，請先登出並重新登入。系統安裝的 Path 應為 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向使用者目錄，請備份並將該 UUID 資料夾移到擴充功能目錄之外，再登出登入。若 Super+V 沒有反應，可執行上方的 enable 命令；若開啟通知，檢查初次安裝中的通知快捷鍵命令。設定無法開啟時，可執行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
+兩個版本都應為 **0.1.16**（擴充功能內部編號為 17）。若套件為新版而 GNOME 仍載入舊版，請先登出並重新登入。系統安裝的 Path 應為 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向使用者目錄，請備份並將該 UUID 資料夾移到擴充功能目錄之外，再登出登入。若 Super+V 沒有反應，可執行上方的 enable 命令；若開啟通知，檢查初次安裝中的通知快捷鍵命令。設定無法開啟時，可執行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
 
-## v0.1.15 設定速查
+## v0.1.16 設定速查
 
 按 Super+V，點選標題列的齒輪按鈕開啟「設定」。
 
@@ -70,6 +70,6 @@ gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 
 先點選目標輸入框，再按 **Super+V**。方向鍵選擇、Enter 插入、Esc 關閉；Ctrl+Tab 切換分頁，Ctrl+F 返回搜尋。表情符號每列顯示多個，可使用中文或英文名稱搜尋。設定可變更位置、快捷鍵、記錄和自動貼上。
 
-同一個安裝套件支援英語、簡體中文、繁體中文、日語、西班牙語、法語和韓語。在 Super V 的「設定 → 外觀 → 語言」中選擇，介面和本地化搜尋會立即更新，無須登出，也不會變更 Ubuntu 的語言。預設為「跟隨系統」；不支援的語言使用英語。語言名稱始終以原文顯示。類別按鈕橫向排列，可直接點選；使用箭頭或水平捲動查看更多類別，點選手掌按鈕選擇膚色。
+同一個安裝套件支援英語、簡體中文、繁體中文、日語、西班牙語、法語和韓語。在 ClipNacre 的「設定 → 外觀 → 語言」中選擇，介面和本地化搜尋會立即更新，無須登出，也不會變更 Ubuntu 的語言。預設為「跟隨系統」；不支援的語言使用英語。語言名稱始終以原文顯示。類別按鈕橫向排列，可直接點選；使用箭頭或水平捲動查看更多類別，點選手掌按鈕選擇膚色。
 
 在設定中新增本機 GIF 檔案。貼上目標必須支援圖片；動畫支援取決於應用程式。沒有線上 GIF 搜尋。剪貼簿歷史可能包含私人文字，持久歷史以明文儲存；詳情與完整測試狀態見 [英文文件](../../README.md) 和 [隱私說明](../../SECURITY.md)。

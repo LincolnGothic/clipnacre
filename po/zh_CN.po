@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 msgid ""
-msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/super-v-ubuntu/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: Super V Ubuntu contributors\nLanguage-Team: zh_CN\nLanguage: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
+msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/clipnacre/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: ClipNacre contributors\nLanguage-Team: zh_CN\nLanguage: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Activities"
 msgstr "活动"
@@ -56,8 +56,8 @@ msgstr "记录剪贴板历史"
 msgid "Center of screen"
 msgstr "屏幕中央"
 
-msgid "Changes Super V immediately. Language names stay in their native form."
-msgstr "立即更改 Super V 的语言。语言名称始终以其原文显示。"
+msgid "Changes ClipNacre immediately. Language names stay in their native form."
+msgstr "立即更改 ClipNacre 的语言。语言名称始终以其原文显示。"
 
 msgid "Choose a folder, or use the last saved location."
 msgstr "选择文件夹，或使用上次保存的位置。"
@@ -341,8 +341,8 @@ msgstr "不透明度"
 msgid "Opacity: %d percent"
 msgstr "不透明度：百分之 %d"
 
-msgid "Open the editor after screenshots taken through Super V. Images in history can always be edited."
-msgstr "通过 Super V 截图后打开编辑器。历史中的图片始终可以编辑。"
+msgid "Open the editor after screenshots taken through ClipNacre. Images in history can always be edited."
+msgstr "通过 ClipNacre 截图后打开编辑器。历史中的图片始终可以编辑。"
 
 msgid "Paste automatically"
 msgstr "自动粘贴"
@@ -488,8 +488,8 @@ msgstr "无法读取保存的历史记录，已将其删除。"
 msgid "Stroke width / text size"
 msgstr "线宽／文字大小"
 
-msgid "Super V"
-msgstr "Super V"
+msgid "ClipNacre"
+msgstr "ClipNacre"
 
 msgid "Opens near the last click in the focused app, with the mouse pointer as a fallback."
 msgstr "在当前应用中上次点击的位置附近打开；没有记录时使用鼠标指针位置。"

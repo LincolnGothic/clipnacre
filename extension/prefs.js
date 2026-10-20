@@ -48,12 +48,12 @@ export default class SuperVPreferences extends ExtensionPreferences {
 
     _fillPage(window, settings) {
         let folderDialog = null;
-        const page = new Adw.PreferencesPage({title: _('Super V'), icon_name: 'edit-paste-symbolic'});
+        const page = new Adw.PreferencesPage({title: _('ClipNacre'), icon_name: 'edit-paste-symbolic'});
         window.add(page);
         const appearance = new Adw.PreferencesGroup({title: _('Appearance')});
         page.add(appearance);
         const language = new Adw.ComboRow({title: _('Language'),
-            subtitle: _('Changes Super V immediately. Language names stay in their native form.'),
+            subtitle: _('Changes ClipNacre immediately. Language names stay in their native form.'),
             model: Gtk.StringList.new(languageOptions.map(option => option.id === 'system' ? _(option.label) : option.label)),
             selected: languageOptions.findIndex(option => option.id === settings.get_string('ui-language'))});
         language.connect('notify::selected', () =>
@@ -98,7 +98,7 @@ export default class SuperVPreferences extends ExtensionPreferences {
             description: _('Use exact desktop application IDs (including .desktop where present) or WM classes. Clipboard origin cannot always be identified.')});
         page.add(integration);
         const editScreenshot = new Adw.SwitchRow({title: _('Edit after taking a screenshot'),
-            subtitle: _('Open the editor after screenshots taken through Super V. Images in history can always be edited.')});
+            subtitle: _('Open the editor after screenshots taken through ClipNacre. Images in history can always be edited.')});
         settings.bind('edit-after-screenshot', editScreenshot, 'active', Gio.SettingsBindFlags.DEFAULT);
         integration.add(editScreenshot);
         const exports = new Adw.PreferencesGroup({title: _('Screenshot export and OCR')});

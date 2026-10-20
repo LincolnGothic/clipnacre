@@ -57,7 +57,7 @@ msgstr ""
 msgid "Center of screen"
 msgstr ""
 
-msgid "Changes Super V immediately. Language names stay in their native form."
+msgid "Changes ClipNacre immediately. Language names stay in their native form."
 msgstr ""
 
 msgid "Choose a folder, or use the last saved location."
@@ -345,7 +345,7 @@ msgstr ""
 msgid "Opacity: %d percent"
 msgstr ""
 
-msgid "Open the editor after screenshots taken through Super V. Images in history can always be edited."
+msgid "Open the editor after screenshots taken through ClipNacre. Images in history can always be edited."
 msgstr ""
 
 msgid "Opens near the last click in the focused app, with the mouse pointer as a fallback."
@@ -498,7 +498,7 @@ msgstr ""
 msgid "Stroke width / text size"
 msgstr ""
 
-msgid "Super V"
+msgid "ClipNacre"
 msgstr ""
 
 msgid "Surprised"

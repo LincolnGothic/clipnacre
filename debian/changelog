@@ -1,3 +1,11 @@
+super-v-ubuntu (0.1.16) unstable; urgency=medium
+
+  * Rename the public project and visible application to ClipNacre.
+  * Update interface catalogs, documentation and screenshot filename defaults.
+  * Retain the Linux package, extension UUID, settings schema and state paths.
+
+ -- ClipNacre contributors <super-v-ubuntu@users.noreply.github.com>  Tue, 20 Oct 2026 12:00:00 -0700
+
 super-v-ubuntu (0.1.15) unstable; urgency=medium
 
   * Enable the screenshot shortcut in Show Applications, overview and search.

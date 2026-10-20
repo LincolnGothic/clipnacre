@@ -168,7 +168,7 @@ async function fixture({count = 125, width = 1920, scale = 1, position = 'pointe
 
 test('loaded version is visible and all five tabs can be reached by keyboard', async () => {
     const {popup, press} = await fixture();
-    assert.equal(popup._title.text, 'Super V 0.1.3');
+    assert.equal(popup._title.text, 'ClipNacre 0.1.3');
     for (const name of ['kaomoji', 'symbols', 'gifs', 'clipboard', 'emoji']) {
         press('Tab', true);
         assert.equal(popup.tab, name);

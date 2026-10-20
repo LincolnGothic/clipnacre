@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 msgid ""
-msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/super-v-ubuntu/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: Super V Ubuntu contributors\nLanguage-Team: ja\nLanguage: ja\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
+msgstr "Project-Id-Version: super-v-ubuntu 0.1.7\nReport-Msgid-Bugs-To: https://github.com/LincolnGothic/clipnacre/issues\nPO-Revision-Date: 2026-10-03 12:00+0000\nLast-Translator: ClipNacre contributors\nLanguage-Team: ja\nLanguage: ja\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Activities"
 msgstr "アクティビティ"
@@ -56,8 +56,8 @@ msgstr "クリップボード履歴を記録"
 msgid "Center of screen"
 msgstr "画面中央"
 
-msgid "Changes Super V immediately. Language names stay in their native form."
-msgstr "Super V の言語がすぐに変わります。言語名は各言語の表記で表示されます。"
+msgid "Changes ClipNacre immediately. Language names stay in their native form."
+msgstr "ClipNacre の言語がすぐに変わります。言語名は各言語の表記で表示されます。"
 
 msgid "Choose a folder, or use the last saved location."
 msgstr "フォルダーを選択するか、前回の保存先を使用します。"
@@ -341,8 +341,8 @@ msgstr "不透明度"
 msgid "Opacity: %d percent"
 msgstr "不透明度：%d パーセント"
 
-msgid "Open the editor after screenshots taken through Super V. Images in history can always be edited."
-msgstr "Super V で撮影した後にエディターを開きます。履歴の画像はいつでも編集できます。"
+msgid "Open the editor after screenshots taken through ClipNacre. Images in history can always be edited."
+msgstr "ClipNacre で撮影した後にエディターを開きます。履歴の画像はいつでも編集できます。"
 
 msgid "Paste automatically"
 msgstr "自動で貼り付け"
@@ -488,8 +488,8 @@ msgstr "保存した履歴を読み込めなかったため、削除しました
 msgid "Stroke width / text size"
 msgstr "線の太さ／文字サイズ"
 
-msgid "Super V"
-msgstr "Super V"
+msgid "ClipNacre"
+msgstr "ClipNacre"
 
 msgid "Opens near the last click in the focused app, with the mouse pointer as a fallback."
 msgstr "アクティブなアプリで最後にクリックした位置の近くに開きます。記録がなければマウスポインターの位置を使います。"

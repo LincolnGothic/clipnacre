@@ -118,7 +118,7 @@ jobs:
           test "$(find artifacts -name '*.deb' | wc -l)" -eq 4
           (cd artifacts && sha256sum *.deb > SHA256SUMS)
           gh release create "$task_tag" artifacts/*.deb artifacts/SHA256SUMS \
-            --target "$GITHUB_SHA" --title "Super V Ubuntu $task_version" \
+            --target "$GITHUB_SHA" --title "ClipNacre $task_version" \
             --notes-file docs/release-notes.md
           mkdir release-verify
           gh release download "$task_tag" --dir release-verify --pattern '*.deb' --pattern SHA256SUMS

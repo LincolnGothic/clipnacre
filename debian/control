@@ -1,7 +1,7 @@
 Source: super-v-ubuntu
 Section: gnome
 Priority: optional
-Maintainer: Super V Ubuntu contributors <super-v-ubuntu@users.noreply.github.com>
+Maintainer: ClipNacre contributors <super-v-ubuntu@users.noreply.github.com>
 Build-Depends: debhelper-compat (= 13), libglib2.0-bin, nodejs (>= 18.17), python3, gettext, locales, eslint, gjs, gir1.2-gtk-4.0, gir1.2-gdkpixbuf-2.0, gir1.2-adw-1 (>= 1.5)
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
@@ -11,7 +11,7 @@ Architecture: all
 Depends: ${misc:Depends}, tesseract-ocr, tesseract-ocr-eng, gnome-shell (>= 46~), gnome-shell (<< 47~) | gnome-shell (>= 48~), gnome-shell (<< 49~) | gnome-shell (>= 50~), gnome-shell (<< 51~), gjs (>= 1.80), gir1.2-gtk-4.0, gir1.2-gdkpixbuf-2.0, gir1.2-adw-1 (>= 1.5)
 Recommends: fonts-noto-color-emoji
 Description: multilingual clipboard and character picker for GNOME Shell
- Super V Ubuntu adds a Windows-style Super+V shell popup with searchable
+ ClipNacre adds a Windows-style Super+V shell popup with searchable
  text/image clipboard history, screenshots, emoji, kaomoji, symbols and GIFs.
  Seven interface languages and localized emoji search are bundled. It uses
  GNOME's Wayland clipboard and virtual keyboard APIs without a daemon.

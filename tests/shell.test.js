@@ -196,7 +196,7 @@ export async function run() {
         check('unchanged clipboard panel becomes visible on every reopen', popup._panel.opacity === 255);
         popup._setTab('emoji');
         await Scripting.sleep(300);
-        check('loaded version is visible', popup._title.text === 'Super V 0.1.15');
+        check('loaded version is visible', popup._title.text === 'ClipNacre 0.1.16');
         check('six equally sized emoji per row', popup._rows.length === 60 &&
             popup.list.get_first_child().get_n_children() === 6);
         const cells = popup._rows.slice(0, 7).map(rectangle);
@@ -565,8 +565,8 @@ export async function run() {
                 extension.history.entries.find(entry => entry.mime === mime).width === 64);
             const receiverLauncher = new Gio.SubprocessLauncher({flags: Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE});
             const receiver = receiverLauncher.spawnv(['gjs', '-m', `${base}/tests/image-receiver-gjs.js`]);
-            await waitFor(() => global.get_window_actors().some(actor => actor.meta_window.get_title() === 'Super V image receiver'));
-            const destination = global.get_window_actors().find(actor => actor.meta_window.get_title() === 'Super V image receiver').meta_window;
+            await waitFor(() => global.get_window_actors().some(actor => actor.meta_window.get_title() === 'ClipNacre image receiver'));
+            const destination = global.get_window_actors().find(actor => actor.meta_window.get_title() === 'ClipNacre image receiver').meta_window;
             destination.activate(global.get_current_time());
             await Scripting.sleep(150);
             const inputFrame = destination.get_frame_rect();
@@ -830,7 +830,7 @@ export async function run() {
         check('native screenshot automatically becomes an image history entry',
             extension.history.entries.some(entry => entry.kind === 'image' && entry.width === global.stage.width && entry.height === global.stage.height));
         await waitFor(() => global.get_window_actors().some(actor => actor.meta_window.get_title() === _('Screenshot editor')));
-        check('Super V capture opens the editor automatically', !!extension.editor.child);
+        check('ClipNacre capture opens the editor automatically', !!extension.editor.child);
         const editorWindow = global.get_window_actors().find(actor => actor.meta_window.get_title() === _('Screenshot editor')).meta_window;
         const editorScreenshot = GLib.getenv('SUPER_V_EDITOR_SCREENSHOT');
         if (editorScreenshot && locale === 'en') {

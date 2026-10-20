@@ -39,7 +39,7 @@ export default class SuperVExtension extends Extension {
         this._stateCancellable = new Gio.Cancellable();
         this.store = new StateStore(undefined, message => {
             if (this._active)
-                Main.notify('Super V', _(message));
+                Main.notify('ClipNacre', _(message));
         });
         this.store.persist = this._shouldPersist();
         this._settingsHandler = this.settings.connect('changed', (_settings, key) => this._settingsChanged(key));
@@ -47,7 +47,7 @@ export default class SuperVExtension extends Extension {
         this._start(epoch).catch(() => {
             if (this._active && epoch === this._epoch) {
                 this.disable();
-                Main.notify('Super V', _('Could not initialize the extension. Disable and re-enable it.'));
+                Main.notify('ClipNacre', _('Could not initialize the extension. Disable and re-enable it.'));
             }
         });
     }
@@ -86,7 +86,7 @@ export default class SuperVExtension extends Extension {
             this.emoji.setRecent(loaded.recent);
             if (loaded.recovered) {
                 await store.erase();
-                Main.notify('Super V', _('Invalid stored history was removed.'));
+                Main.notify('ClipNacre', _('Invalid stored history was removed.'));
             }
             let missing = false;
             for (const entry of [...this.history.entries]) {
@@ -113,7 +113,7 @@ export default class SuperVExtension extends Extension {
             this.history.entries = this.history.entries.filter(entry =>
                 entry.kind !== 'image' || this.images.get(entry));
             if (missing)
-                Main.notify('Super V', _('Some saved images could not be read and were removed.'));
+                Main.notify('ClipNacre', _('Some saved images could not be read and were removed.'));
         } else if (!store.persist) {
             await store.erase();
         }
@@ -160,7 +160,7 @@ export default class SuperVExtension extends Extension {
         this.screenPins = new ScreenPins(copyImage);
         this.editor = new EditorBridge(this.dir, copyImage, () => {
             if (this._active)
-                Main.notify('Super V', _('Could not open or communicate with the screenshot editor.'));
+                Main.notify('ClipNacre', _('Could not open or communicate with the screenshot editor.'));
         }, {onPin: bytes => this.pinImage(bytes, 'image/png', this._editorEntryId, this._editorSourceDigest), onText: text => {
             if (!this._active || Main.sessionMode.isLocked || Main.sessionMode.isGreeter) return;
             this.pendingRestore = null;
@@ -170,7 +170,7 @@ export default class SuperVExtension extends Extension {
         this.pasteBackend = new PasteBackend(this.settings,
             window => this.identifiers(window), () => {
                 if (this._active)
-                    Main.notify('Super V', _('Copied to clipboard. Use your application’s paste shortcut.'));
+                    Main.notify('ClipNacre', _('Copied to clipboard. Use your application’s paste shortcut.'));
             });
         this.popup = new SuperVPopup(this);
         this._sessionHandler = Main.sessionMode.connect('updated', () => {
@@ -268,7 +268,7 @@ export default class SuperVExtension extends Extension {
 
     pin(id) {
         if (!this.history.togglePin(id))
-            Main.notify('Super V', _('You can pin up to 100 entries.'));
+            Main.notify('ClipNacre', _('You can pin up to 100 entries.'));
         this.changed();
     }
 
@@ -329,7 +329,7 @@ export default class SuperVExtension extends Extension {
         if (generation === this.clipboard.generation && current === restore.emoji)
             this.clipboard.write(restore.previous);
         else
-            Main.notify('Super V', _('Clipboard changed; the newer clipboard was preserved.'));
+            Main.notify('ClipNacre', _('Clipboard changed; the newer clipboard was preserved.'));
         this.pendingRestore = null;
         this.popup.refresh();
     }
@@ -350,7 +350,7 @@ export default class SuperVExtension extends Extension {
             this.pasteBackend.paste(target);
         } catch {
             if (this._active && epoch === this._epoch)
-                Main.notify('Super V', _('Could not read that GIF. Re-add it in Settings or choose another file.'));
+                Main.notify('ClipNacre', _('Could not read that GIF. Re-add it in Settings or choose another file.'));
         }
     }
 
@@ -363,7 +363,7 @@ export default class SuperVExtension extends Extension {
     pinImage(bytes, mime, sourceId = null, sourceDigest = null) {
         if (!this._active || !this._ready || Main.sessionMode.isLocked || Main.sessionMode.isGreeter) return;
         try { this.screenPins.add(bytes, mime, sourceId, sourceDigest); }
-        catch { Main.notify('Super V', _('Could not pin this image. Close a pinned image or use a smaller image.')); }
+        catch { Main.notify('ClipNacre', _('Could not pin this image. Close a pinned image or use a smaller image.')); }
     }
 
     _openEditor(bytes, mime, id = null) {
@@ -376,7 +376,7 @@ export default class SuperVExtension extends Extension {
         this._editorEntryId = id;
         this._editorSourceDigest = GLib.compute_checksum_for_bytes(GLib.ChecksumType.SHA256, new GLib.Bytes(bytes));
         try { this.editor.open(bytes, mime); }
-        catch { Main.notify('Super V', _('Could not open or communicate with the screenshot editor.')); }
+        catch { Main.notify('ClipNacre', _('Could not open or communicate with the screenshot editor.')); }
     }
 
     _cancelScreenshot() {
@@ -427,7 +427,7 @@ export default class SuperVExtension extends Extension {
                 return;
             if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION ||
                 width * height > MAX_IMAGE_PIXELS) {
-                Main.notify('Super V', _('Screenshot is too large. Select a smaller area.'));
+                Main.notify('ClipNacre', _('Screenshot is too large. Select a smaller area.'));
                 return;
             }
             stream = Gio.MemoryOutputStream.new_resizable();
@@ -438,7 +438,7 @@ export default class SuperVExtension extends Extension {
             stream.close(null);
             if (!current()) return;
             if (stream.get_data_size() > MAX_IMAGE_BYTES) {
-                Main.notify('Super V', _('Screenshot is too large. Select a smaller area.'));
+                Main.notify('ClipNacre', _('Screenshot is too large. Select a smaller area.'));
                 return;
             }
             const bytes = stream.steal_as_bytes().get_data();
@@ -455,7 +455,7 @@ export default class SuperVExtension extends Extension {
             }
         } catch (error) {
             if (current() && !error.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-                Main.notify('Super V', _('Could not open the screenshot tool. Try Print Screen.'));
+                Main.notify('ClipNacre', _('Could not open the screenshot tool. Try Print Screen.'));
         } finally {
             if (stream && !stream.is_closed()) stream.close(null);
             if (this._areaCapture === selector) this._areaCapture = null;
@@ -496,7 +496,7 @@ export default class SuperVExtension extends Extension {
         } else if (key === 'ui-language') {
             initTranslations(this.dir, this.settings.get_string('ui-language'));
             if (this._ready)
-                this._updateLanguage().catch(error => console.error(`Super V language: ${error.message}`));
+                this._updateLanguage().catch(error => console.error(`ClipNacre language: ${error.message}`));
         }
     }
 
