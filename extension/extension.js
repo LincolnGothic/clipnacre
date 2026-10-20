@@ -188,8 +188,10 @@ export default class SuperVExtension extends Extension {
         Main.wm.addKeybinding('open-popup', this.settings, Meta.KeyBindingFlags.NONE,
             Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP, () => this.toggle());
         this._binding = true;
+        // Show Applications, the window overview and search use OVERVIEW mode.
+        // Keep the visible overview intact so capture freezes its actual pixels.
         Main.wm.addKeybinding('take-screenshot', this.settings, Meta.KeyBindingFlags.NONE,
-            Shell.ActionMode.NORMAL | Shell.ActionMode.POPUP, () => this.takeScreenshot());
+            Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW | Shell.ActionMode.POPUP, () => this.takeScreenshot());
         this._screenshotBinding = true;
         this.changed();
     }
@@ -445,8 +447,12 @@ export default class SuperVExtension extends Extension {
                 const image = this.images.add(bytes, 'image/png');
                 this.history.addImage(image); this.changed();
             }
-            if (this.settings.get_boolean('edit-after-screenshot'))
+            if (this.settings.get_boolean('edit-after-screenshot')) {
+                // Leave the overview only after exporting its frozen pixels so
+                // the GTK editor is visible. Cancellation keeps the overview.
+                Main.overview.hide();
                 this._openEditor(bytes, 'image/png');
+            }
         } catch (error) {
             if (current() && !error.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                 Main.notify('Super V', _('Could not open the screenshot tool. Try Print Screen.'));

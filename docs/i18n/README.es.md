@@ -2,6 +2,8 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.15 corrige el atajo de captura después de abrir «Mostrar aplicaciones» en Ubuntu. Super+Mayús+S también funciona en la vista de ventanas y la búsqueda de aplicaciones. Conserva la imagen visible; Escape cancela la selección.
+
 v0.1.14 añade reconocimiento visual de texto en capturas. Pulsa **Super+Shift+S** y abre **Copiar texto de la imagen** (**Ctrl+Shift+O**) en el editor. Haz clic en una palabra reconocida o arrastra sobre una región, revisa y edita el resultado y cópialo. **Seleccionar todo el texto** restaura el resultado completo. El OCR funciona localmente; el paquete incluye inglés. Para español, instala `tesseract-ocr-spa` y selecciónalo en el diálogo. Si está instalado, el inglés se combina con el idioma elegido para reconocer texto mixto. Después de actualizar, guarda tu trabajo, cierra la sesión y vuelve a entrar.
 
 ![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
@@ -22,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## Primera instalación
 
-Descarga el [paquete v0.1.14](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb) y abre un terminal en la carpeta que contiene el archivo:
+Descarga el [paquete v0.1.15](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.15/super-v-ubuntu_0.1.15_all.deb) y abre un terminal en la carpeta que contiene el archivo:
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.14_all.deb
+sudo apt install ./super-v-ubuntu_0.1.15_all.deb
 ```
 
 Después de instalar, **guarda tu trabajo, cierra la sesión y vuelve a entrar**. Ejecuta estos comandos como usuario normal, sin sudo. El primero asigna Super+M a las notificaciones para dejar Super+V disponible; reemplaza cualquier atajo de notificaciones personalizado.
@@ -36,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Pulsa **Super+V**; el título debe mostrar **Super V 0.1.14**.
+Pulsa **Super+V**; el título debe mostrar **Super V 0.1.15**.
 
-## Actualizar a v0.1.14
+## Actualizar a v0.1.15
 
-Descarga el paquete anterior y ejecuta el mismo comando apt desde su carpeta. Se instala sobre la versión anterior; no hace falta desinstalarla. Después, **guarda tu trabajo, cierra la sesión y vuelve a entrar**, y comprueba **Super V 0.1.14** en el título de **Super+V**. Se conservan el idioma y los atajos, y se migra el historial de texto guardado, los elementos fijados y los emojis recientes. El historial configurado para borrarse al cerrar sesión se elimina según esa preferencia.
+Descarga el paquete anterior y ejecuta el mismo comando apt desde su carpeta. Se instala sobre la versión anterior; no hace falta desinstalarla. Después, **guarda tu trabajo, cierra la sesión y vuelve a entrar**, y comprueba **Super V 0.1.15** en el título de **Super+V**. Se conservan el idioma y los atajos, y se migra el historial de texto guardado, los elementos fijados y los emojis recientes. El historial configurado para borrarse al cerrar sesión se elimina según esa preferencia.
 
 Comprueba el paquete instalado y la extensión cargada por GNOME como usuario normal:
 
@@ -49,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-Ambos deben indicar **0.1.14** (el número interno de la extensión es 15). Si solo el paquete es nuevo, cierra y vuelve a abrir la sesión. Para el paquete del sistema, Path debe ser `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si apunta a tu carpeta personal, guarda una copia de esa carpeta UUID y muévela fuera del directorio de extensiones; después vuelve a iniciar sesión. Si Super+V no responde, ejecuta el comando enable anterior; si abre notificaciones, revisa el comando de atajos de la primera instalación. Para abrir Ajustes directamente, usa `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
+Ambos deben indicar **0.1.15** (el número interno de la extensión es 16). Si solo el paquete es nuevo, cierra y vuelve a abrir la sesión. Para el paquete del sistema, Path debe ser `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`. Si apunta a tu carpeta personal, guarda una copia de esa carpeta UUID y muévela fuera del directorio de extensiones; después vuelve a iniciar sesión. Si Super+V no responde, ejecuta el comando enable anterior; si abre notificaciones, revisa el comando de atajos de la primera instalación. Para abrir Ajustes directamente, usa `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`.
 
-## Guía de ajustes de v0.1.14
+## Guía de ajustes de v0.1.15
 
 Abre Super+V y pulsa el botón de engranaje de la cabecera para abrir Ajustes.
 

@@ -5,16 +5,16 @@ emoji generation, ESLint, Node logic/adapter tests, and GJS/Gio filesystem
 integration. Mock adapter tests exercise the actual asynchronous controller
 and clipboard modules, but do not prove Mutter clipboard, shell rendering or
 input delivery works on a real desktop. CI builds the `.deb` and checks it
-without an interactive shell. See `verification-v0.1.14.md` for current executed results.
+without an interactive shell. See `verification-v0.1.15.md` for current executed results.
 
 ## Package checks
 
 ```sh
 make package
-lintian --fail-on error,warning ../super-v-ubuntu_0.1.14_all.deb
-dpkg-deb --info ../super-v-ubuntu_0.1.14_all.deb
-dpkg-deb --contents ../super-v-ubuntu_0.1.14_all.deb
-python3 scripts/audit-package.py ../super-v-ubuntu_0.1.14_all.deb
+lintian --fail-on error,warning ../super-v-ubuntu_0.1.15_all.deb
+dpkg-deb --info ../super-v-ubuntu_0.1.15_all.deb
+dpkg-deb --contents ../super-v-ubuntu_0.1.15_all.deb
+python3 scripts/audit-package.py ../super-v-ubuntu_0.1.15_all.deb
 ```
 
 The archive must contain runtime files and compiled schemas only beneath
@@ -33,7 +33,7 @@ a backup if it contains local changes.
 ```sh
 gnome-shell --version
 printf '%s\n' "$XDG_SESSION_TYPE"
-sudo apt install ./super-v-ubuntu_0.1.14_all.deb
+sudo apt install ./super-v-ubuntu_0.1.15_all.deb
 ```
 
 Log out/in, then enable and inspect it as your desktop user:
@@ -101,7 +101,7 @@ Record any custom notification bindings first; the command replaces them.
     entries or cause shell exceptions. Test light/dark themes, 100%/200% scale,
     multiple monitors, long previews, scrolling beyond 60 results and keyboard
     navigation through incrementally rendered results.
-11. Confirm the header reads Super V 0.1.14. With Near last click selected,
+11. Confirm the header reads Super V 0.1.15. With Near last click selected,
     click an input, move the pointer away, and open beside the remembered point.
     Drag the title bar to each edge, then check Settings and Screenshot clicks.
     Check work-area bounds,
@@ -220,3 +220,15 @@ OCR accuracy on arbitrary documents, or interactive monitor/lock acceptance.
   links, multiple files, invalid images, oversized inputs and symlinks.
 - Native automation removes a colored desktop element during selection and
   verifies the exported pixel color still matches the frozen snapshot.
+
+## v0.1.15 overview screenshot regression
+
+- Click Ubuntu's Show Applications button, press Super+Shift+S and drag an area.
+  The preview and exported image must show the application grid.
+- Repeat in the window overview and while overview search contains text. Escape
+  must cancel selection without adding history or dismissing the overview.
+- Configure a different screenshot accelerator and repeat in overview search.
+- Complete another capture with automatic editing enabled; verify the editor
+  appears, and confirm screenshots still work after returning to an application.
+- Check lock-screen behavior separately: screenshots must stay unavailable while
+  locked. The binding includes NORMAL, OVERVIEW and POPUP only.

@@ -1,3 +1,12 @@
+super-v-ubuntu (0.1.15) unstable; urgency=medium
+
+  * Enable the screenshot shortcut in Show Applications, overview and search.
+  * Preserve frozen overview pixels and Escape cancellation behavior.
+  * Present the automatic editor by leaving overview after successful capture.
+  * Add native Wayland shortcut, capture and custom binding regressions.
+
+ -- Super V Ubuntu contributors <super-v-ubuntu@users.noreply.github.com>  Mon, 19 Oct 2026 18:40:00 -0700
+
 super-v-ubuntu (0.1.14) unstable; urgency=medium
 
   * Add visual screenshot OCR with word highlights and click/drag selection.

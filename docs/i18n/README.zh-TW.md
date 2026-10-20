@@ -2,6 +2,8 @@
 
 [English](../../README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
+v0.1.15 修正點擊 Ubuntu「顯示應用程式」後截圖快捷鍵無反應的問題。Super+Shift+S 現在也支援視窗概覽及應用程式搜尋，截圖保留目前畫面，Escape 取消選取。
+
 v0.1.14 新增視覺化截圖文字辨識。按 **Super+Shift+S** 截圖，在編輯器中點擊 **從影像複製文字**（或按 **Ctrl+Shift+O**），即可在影像上查看辨識出的文字框。點擊單一詞語或拖曳選取一片區域，檢查並編輯結果後複製；**選取全部文字** 可恢復完整辨識結果。OCR 在本機執行，英文語言套件隨安裝包提供；中文需安裝 `tesseract-ocr-chi-tra` 或 `tesseract-ocr-chi-sim`，並在辨識對話框中選擇對應語言。已安裝的英文套件會與所選語言一起辨識混合文字。升級後請儲存工作、登出並重新登入。
 
 ![OCR v0.1.14](../screenshots/ocr-v0.1.14.png)
@@ -22,10 +24,10 @@ Ubuntu 24.04 / GNOME 46 · Ubuntu 26.04 / GNOME 50 · Debian 13 / GNOME 48 · Wa
 
 ## 初次安裝
 
-下載 [v0.1.14 安裝套件](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.14/super-v-ubuntu_0.1.14_all.deb)，在套件所在資料夾中開啟終端機：
+下載 [v0.1.15 安裝套件](https://github.com/LincolnGothic/super-v-ubuntu/releases/download/v0.1.15/super-v-ubuntu_0.1.15_all.deb)，在套件所在資料夾中開啟終端機：
 
 ```sh
-sudo apt install ./super-v-ubuntu_0.1.14_all.deb
+sudo apt install ./super-v-ubuntu_0.1.15_all.deb
 ```
 
 安裝後**儲存工作、登出並重新登入**，再以一般使用者執行以下命令（不使用 sudo）。第一個命令將通知快捷鍵設為 Super+M，讓本應用程式使用 Super+V；它會取代自訂通知快捷鍵。
@@ -36,11 +38,11 @@ gnome-extensions enable super-v-ubuntu@super-v-ubuntu.local
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-按 **Super+V**，標題應為 **Super V 0.1.14**。
+按 **Super+V**，標題應為 **Super V 0.1.15**。
 
-## 升級到 v0.1.14
+## 升級到 v0.1.15
 
-下載上方的套件，在套件所在資料夾中執行同一個 apt 命令，即可覆蓋升級，無須先解除安裝。接著**儲存工作、登出並重新登入**，再按 **Super+V** 確認標題為 **Super V 0.1.14**。語言與快捷鍵設定會保留，已儲存的文字歷史、釘選項目和最近使用的表情會遷移；設定為登出時清空的歷史會依設定清空。
+下載上方的套件，在套件所在資料夾中執行同一個 apt 命令，即可覆蓋升級，無須先解除安裝。接著**儲存工作、登出並重新登入**，再按 **Super+V** 確認標題為 **Super V 0.1.15**。語言與快捷鍵設定會保留，已儲存的文字歷史、釘選項目和最近使用的表情會遷移；設定為登出時清空的歷史會依設定清空。
 
 以一般使用者檢查套件及 GNOME 目前載入的版本：
 
@@ -49,9 +51,9 @@ dpkg-query -W super-v-ubuntu
 gnome-extensions info super-v-ubuntu@super-v-ubuntu.local
 ```
 
-兩個版本都應為 **0.1.14**（擴充功能內部編號為 15）。若套件為新版而 GNOME 仍載入舊版，請先登出並重新登入。系統安裝的 Path 應為 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向使用者目錄，請備份並將該 UUID 資料夾移到擴充功能目錄之外，再登出登入。若 Super+V 沒有反應，可執行上方的 enable 命令；若開啟通知，檢查初次安裝中的通知快捷鍵命令。設定無法開啟時，可執行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
+兩個版本都應為 **0.1.15**（擴充功能內部編號為 16）。若套件為新版而 GNOME 仍載入舊版，請先登出並重新登入。系統安裝的 Path 應為 `/usr/share/gnome-shell/extensions/super-v-ubuntu@super-v-ubuntu.local`；若指向使用者目錄，請備份並將該 UUID 資料夾移到擴充功能目錄之外，再登出登入。若 Super+V 沒有反應，可執行上方的 enable 命令；若開啟通知，檢查初次安裝中的通知快捷鍵命令。設定無法開啟時，可執行 `gnome-extensions prefs super-v-ubuntu@super-v-ubuntu.local`。
 
-## v0.1.14 設定速查
+## v0.1.15 設定速查
 
 按 Super+V，點選標題列的齒輪按鈕開啟「設定」。
 

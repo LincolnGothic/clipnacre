@@ -1,28 +1,23 @@
-Super V Ubuntu 0.1.14 adds visual screenshot text recognition.
+Super V Ubuntu 0.1.15 fixes screenshots in Ubuntu Show Applications.
 
-Press Super+Shift+S to capture an area, then click **Copy text from image** in the
-editor (or press Ctrl+Shift+O). Recognized words are highlighted over the edited
-screenshot. Click a word or drag across a region to extract its text, correct the
-editable result, and click **Copy text**. **Select all text** restores the full
-recognition; selecting text in the result field copies just that range.
+Previously Super+Shift+S stopped responding after clicking the dock's
+**Show Applications** button. GNOME switches to its OVERVIEW action mode there,
+which the shortcut did not allow. The configured screenshot shortcut now works
+in the application grid, window overview and overview search as well as normal
+applications and popups.
 
-Recognition runs entirely on your computer with Tesseract. English is included
-with the package. For Chinese, install `tesseract-ocr-chi-sim` or
-`tesseract-ocr-chi-tra` and choose that language in the dialog. Installed English
-is included with the selected language for mixed text. Japanese, Korean, Spanish,
-French and other installed Tesseract packs are also available.
+Capture keeps the visible overview in the frozen snapshot. Drag to select an
+area; Escape cancels without adding a history item. Custom screenshot shortcuts
+also work in the overview. A completed capture leaves the overview when opening
+the automatic editor so its window is visible. Existing screenshot editing, local OCR, clipboard
+history and screen pins remain available.
 
-The seven interface languages include the new controls. Closing the dialog
-cancels recognition; retries clear stale text. Recognition output, word geometry,
-word counts and runtime are bounded, and OCR creates no scratch images or network
-requests. Review OCR text before using it.
+Upgrade using your distribution's installer, then save your work, log out and
+log back in to load the new GNOME extension. Settings and saved history are
+retained; history configured to clear at logout is erased according to that setting.
 
-Upgrade with the package matching your distribution, then log out and back in to
-reload the GNOME extension. Settings and clipboard history are retained.
-
-Native CI builds and tests Ubuntu 24.04 / GNOME 46, Ubuntu 26.04 / GNOME 50, and
-Debian 13 / GNOME 48 on amd64 and arm64 before publication. Automated coverage
-includes pointer word/region selection, editable Unicode text, copy selections,
-empty/oversized results, cancellation and the existing screenshot, image clipboard
-and pin workflows. Arbitrary-document OCR accuracy, hardware GPU behavior and
-HiDPI/multi-monitor acceptance still require testing on your desktop.
+Native Wayland regression tests deliver actual keyboard and pointer events in
+window overview, Show Applications and search. They check frozen exported pixels,
+Escape cancellation and custom accelerators. The release pipeline builds and
+checks Ubuntu 24.04 / GNOME 46, Ubuntu 26.04 / GNOME 50, and Debian 13 / GNOME 48
+on amd64 and arm64 before publishing installers and SHA256SUMS.
