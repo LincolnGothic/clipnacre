@@ -1,0 +1,35 @@
+name: macOS
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: macos-15, arch: arm64}
+          - {runner: macos-15-intel, arch: x86_64}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify native Mac app
+        run: bash scripts/build-macos.sh '${{ matrix.arch }}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}
+          path: |
+            artifacts/clipnacre_*_macos_${{ matrix.arch }}.zip
+            artifacts/clipnacre_*_macos_${{ matrix.arch }}.dmg
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-preview-${{ matrix.arch }}
+          path: artifacts/clipnacre-macos-${{ matrix.arch }}.png
+          if-no-files-found: ignore
